@@ -18,68 +18,68 @@ export default function NosEglisesPage() {
     <main className="min-h-screen bg-gray-50">
       
       {/* 1. HEADER GLOBAL */}
-      <header className="relative z-40 w-full h-20 bg-red-600 backdrop-blur-md border-b">
-        <div className="relative flex items-center h-full px-4 md:px-8 justify-between max-w-7xl mx-auto">
-          
-          <div className="relative flex items-center h-full">
-            <Link href="/" className="absolute top-[-5] left-0 w-20 h-20 md:w-28 md:h-28 z-50 drop-shadow-md">
-              <Image
-                src="/logo.png"
-                alt="Logo ERPEVAI"
-                fill
-                className="object-contain"
-              />
-            </Link>
-            <div className="pl-24 md:pl-32 flex flex-col justify-center">
-              <h1 className="text-lg md:text-xl font-bold leading-tight text-white">
-                Église de Réveil du Plein Évangile
-              </h1>
-             <p className="text-sm text-white/80 hidden sm:block">
-                Vision Apostolique Internationale
-              </p>
+<header className="relative z-40 w-full h-20 bg-red-600 backdrop-blur-md border-b border-red-500 shadow-lg">
+  <div className="relative flex items-center h-full px-4 md:px-8 justify-between max-w-7xl mx-auto">
+    
+    <div className="relative flex items-center h-full">
+      <Link href="/" className="absolute top-[-5px] left-0 w-20 h-20 md:w-28 md:h-28 z-50 drop-shadow-md">
+        <Image
+          src="/logo.png"
+          alt="Logo ERPEVAI"
+          fill
+          className="object-contain"
+        />
+      </Link>
+      <div className="pl-24 md:pl-32 flex flex-col justify-center">
+        <h1 className="text-lg md:text-xl font-bold leading-tight text-white">
+          Église de Réveil du Plein Évangile
+        </h1>
+        <p className="text-sm text-white/80 hidden sm:block">
+          Vision Apostolique Internationale
+        </p>
+      </div>
+    </div>
+
+    <div className="flex items-center gap-8">
+      <nav className="hidden md:flex items-center gap-8 text-lg font-medium text-white relative">
+        <Link href="/" className="hover:text-red-200 transition-colors">Accueil</Link>
+        
+        <div 
+          className="relative py-2 cursor-pointer"
+          onMouseEnter={() => setIsDropdownOpen(true)}
+          onMouseLeave={() => setIsDropdownOpen(false)}
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
+          <button className="hover:text-red-200 transition-colors flex items-center gap-1 focus:outline-none">
+            Vie de l'Église
+            <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 text-slate-800 flex flex-col z-50">
+              <Link href="/vie-eglise/notre-histoire" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Notre histoire</Link>
+              <Link href="/vie-eglise/cdn" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Le CDN</Link>
+              <Link href="/vie-eglise/departements" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Nos départements</Link>
+              <Link href="/vie-eglise/institut-pastoral" className="px-4 py-2.5 bg-slate-50 text-sm font-bold transition-colors text-green-600">Institut Pastoral</Link>
             </div>
-          </div>
-
-          <div className="flex items-center gap-8">
-            <nav className="hidden md:flex items-center gap-8 text-lg font-medium text-white relative">
-              <Link href="/" className="hover:text-red-200 transition-colors">Accueil</Link>
-              
-              <div 
-                className="relative py-2 cursor-pointer"
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                <button className="hover:text--200 transition-colors flex items-center gap-1 focus:outline-none">
-                  Vie de l'Église
-                  <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 text-slate-800 flex flex-col z-50">
-                    <Link href="/vie-eglise/notre-histoire" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Notre histoire</Link>
-                    <Link href="/vie-eglise/cdn" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Le CDN</Link>
-                    <Link href="/vie-eglise/departements" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Nos départements</Link>
-                    <Link href="/vie-eglise/institut-pastoral" className="px-4 py-2.5 bg-slate-50 text-sm font-bold transition-colors text-green-600">Institut Pastoral</Link>
-                  </div>
-                )}
-              </div>
-
-             <Link href="/Nos-eglises" className="...">Nos églises</Link>
-              <Link href="/medias" className="hover:text-green-200 transition-colors">Espace médias</Link>
-            </nav>
-
-            <button 
-              onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-md"
-            >
-              Faire un don
-            </button>
-          </div>
+          )}
         </div>
-      </header>
+
+        <Link href="/Nos-eglises" className="hover:text-red-200 transition-colors">Nos églises</Link>
+        <Link href="/medias" className="hover:text-red-200 transition-colors">Espace médias</Link>
+      </nav>
+
+      <button 
+        onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
+        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-md"
+      >
+        Faire un don
+      </button>
+    </div>
+  </div>
+</header>
 
       {/* 2. HERO SECTION CORRIGÉE (Le texte n'est plus masqué) */}
       <section className="relative min-h-[65vh] flex items-center justify-center text-center px-4 pt-20 pb-24 overflow-hidden bg-slate-950 text-white">
