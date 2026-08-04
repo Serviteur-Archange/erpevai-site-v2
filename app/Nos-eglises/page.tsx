@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import DonationModal from '@/components/DonationModal';
+import DonationModal from '../DonationModal';
 export default function NosEglisesPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
@@ -18,7 +18,7 @@ export default function NosEglisesPage() {
   return (
     <main className="min-h-screen bg-gray-50 pt-20">
       {/* 1. HEADER GLOBAL */}
-      <header className="fixed top-0 left-0 z-40 w-full h-20 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <header className="relative z-30 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 text-gray-800">
         <div className="relative flex items-center h-full px-4 md:px-8 justify-between max-w-7xl mx-auto">
           
           {/* LOGO ET TITRE */}
