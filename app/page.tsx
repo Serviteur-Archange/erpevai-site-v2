@@ -121,7 +121,7 @@ export default function NotreHistoire() {
 
      {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
       <MarqueeCommuniques 
-        onCommuniqueClick={(item) => setSelectedCommunique({
+      onCommuniqueClick={(item: any) => setSelectedCommunique({
           title: item.title,
           date: item.created_at ? new Date(item.created_at).toLocaleDateString() : (item.category || "Annonce"),
           content: item.content
