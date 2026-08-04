@@ -1,11 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import DonationModal from '../../DonationModal';
 
 export default function institutpastoralpage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenDonation = () => setIsDonationOpen(true);
+    window.addEventListener('open-donation', handleOpenDonation as EventListener);
+    return () => {
+      window.removeEventListener('open-donation', handleOpenDonation as EventListener);
+    };
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -60,13 +70,13 @@ export default function institutpastoralpage() {
                 )}
               </div>
 
-              <Link href="/vie-eglise/eglises" className="hover:text-green-200 transition-colors">Nos églises</Link>
+             <Link href="/Nos-eglises" className="hover:text-green-200 transition-colors">Nos églises</Link>
               <Link href="/medias" className="hover:text-green-200 transition-colors">Espace médias</Link>
             </nav>
 
-            <button 
+          <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-md"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors"
             >
               Faire un don
             </button>
@@ -119,83 +129,45 @@ export default function institutpastoralpage() {
       </section>
 
       {/* 4. HISTOIRE, VISION & DIRECTION */}
-      <section className="max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-16 items-start text-slate-800">
-        
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-green-600">🏛️ Origines & Mission</span>
-            <h2 className="text-3xl font-black text-slate-900 border-l-4 border-green-600 pl-4">
-              Notre Histoire & Vision
-            </h2>
-          </div>
-          <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-            Fondé en <strong>2000 par l'Apôtre OULI Samuel</strong>, l'ISTP est né d'une vision claire : offrir une formation théologique et pastorale rigoureuse, accessible et profondément ancrée dans la Parole de Dieu.
-          </p>
-          <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-            Depuis plus de deux décennies, l'institut s'impose comme un pôle de référence dans la région de Bouaké et au-delà pour la préparation au ministère.
-          </p>
+  <section className="max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-16 items-center text-slate-800">
+      
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <span className="text-xs font-bold uppercase tracking-wider text-green-600">🏛️ Origines & Mission</span>
+        <h2 className="text-3xl font-black text-slate-900 border-l-4 border-green-600 pl-4">
+          Notre Histoire & Vision
+        </h2>
+      </div>
+      <p className="text-slate-600 text-sm md:text-base leading-relaxed">
+        Fondé en <strong>2000 par l'Apôtre OULI Samuel</strong>, l'ISTP est né d'une vision claire : offrir une formation théologique et pastorale rigoureuse, accessible et profondément ancrée dans la Parole de Dieu.
+      </p>
+      <p className="text-slate-600 text-sm md:text-base leading-relaxed">
+        Depuis plus de deux décennies, l'institut s'impose comme un pôle de référence dans la région de Bouaké et au-delà pour la préparation au ministère.
+      </p>
+    </div>
+
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-lg space-y-6 flex flex-col items-center">
+      <div className="relative w-full h-72 rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
+        <Image 
+          src="/Directeur.jpg" 
+          alt="Dr KOUASSI KOUADIO DENIS"
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="space-y-3 w-full text-center md:text-left">
+        <div className="space-y-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-600">👨‍💼 Gouvernance</span>
+          <h3 className="text-xl font-extrabold text-slate-900">Dr KOUASSI KOUADIO DENIS</h3>
+          <p className="text-xs font-semibold text-slate-500">Directeur de l'ISTP</p>
         </div>
+        <p className="text-slate-600 text-sm leading-relaxed text-justify">
+          L'institut est aujourd'hui dirigé avec excellence et dévouement par le Dr KOUASSI KOUADIO DENIS. Sous sa gouvernance, l'ISTP continue de moderniser ses programmes académiques tout en préservant le feu de la consécration et de la piété indispensables au ministère pastoral et missionnaire.
+        </p>
+      </div>
+    </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-lg space-y-6 flex flex-col items-center">
-          <div className="relative w-full h-72 rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
-            <Image 
-              src="/Directeur.jpg" 
-              alt="Dr KOUASSI KOUADIO DENIS"
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div className="space-y-3 w-full text-center md:text-left">
-            <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-600">👨‍💼 Gouvernance</span>
-              <h3 className="text-xl font-extrabold text-slate-900">Dr KOUASSI KOUADIO DENIS</h3>
-              <p className="text-xs font-semibold text-slate-500">Directeur de l'ISTP</p>
-            </div>
-            <p className="text-slate-600 text-sm leading-relaxed text-justify">
-              L'institut est aujourd'hui dirigé avec excellence et dévouement par le Dr KOUASSI KOUADIO DENIS. Sous sa gouvernance, l'ISTP continue de moderniser ses programmes académiques tout en préservant le feu de la consécration et de la piété indispensables au ministère pastoral et missionnaire.
-            </p>
-          </div>
-        </div>
-
-      </section>
-
-      {/* 5. NOS PROGRAMMES DE FORMATION */}
-      <section className="bg-slate-100 border-y border-slate-200 py-20 px-6">
-        <div className="max-w-6xl mx-auto space-y-12">
-          
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-green-600">🎓 Cursus Académiques</span>
-            <h2 className="text-3xl font-black text-slate-900">Nos Programmes de Formation</h2>
-            <p className="text-slate-500 text-sm leading-relaxed">
-              Conscient des réalités et des emplois du temps de chacun (étudiants à temps plein, professionnels, ouvriers d'église), l'ISTP propose des parcours flexibles adaptés à votre rythme :
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm space-y-4 hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-2xl">
-                📍
-              </div>
-              <h3 className="text-xl font-bold text-slate-900">Cours en Présentiel</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Dispensés directement sur notre campus au sein de <strong>l'Institut Pastoral de Bouaké</strong>. Ce format privilégie la proximité, la vie communautaire et le mentorat direct avec le corps enseignant.
-              </p>
-            </div>
-
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm space-y-4 hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl">
-                💻
-              </div>
-              <h3 className="text-xl font-bold text-slate-900">Cours en Ligne (À distance)</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Une solution moderne et flexible permettant de suivre l'intégralité du <strong>Programme de Formation Pastorale et Missionnaire</strong> depuis chez vous, où que vous soyez, tout en maintenant vos activités professionnelles ou familiales.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
+  </section>
 
       {/* 6. NOUVELLE SECTION : GRILLE ALBUM PHOTOS DE L'INSTITUT */}
       <section className="max-w-6xl mx-auto px-6 py-20 space-y-10">
@@ -212,7 +184,7 @@ export default function institutpastoralpage() {
           
           <div className="relative h-72 rounded-2xl overflow-hidden border border-slate-200 shadow-md group bg-white">
             <Image 
-              src="/Photo2.jpg" // À remplacer par ta photo de diplômés
+              src="/Photo2.jpg"
               alt="Cérémonie de remise des diplômes" 
               fill 
               className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -224,7 +196,7 @@ export default function institutpastoralpage() {
 
           <div className="relative h-72 rounded-2xl overflow-hidden border border-slate-200 shadow-md group bg-white">
             <Image 
-              src="/Photo3.jpg" // À remplacer par ta photo de groupe promo
+              src="/Photo3.jpg"
               alt="Les étudiants de l'ISTP" 
               fill 
               className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -236,7 +208,7 @@ export default function institutpastoralpage() {
 
           <div className="relative h-72 rounded-2xl overflow-hidden border border-slate-200 shadow-md group bg-white">
             <Image 
-              src="/Photo 1.jpg" // À remplacer par ta photo de consécration / prière
+              src="/Photo 1.jpg"
               alt="Moment de consécration pastorale" 
               fill 
               className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -307,7 +279,8 @@ export default function institutpastoralpage() {
           </div>
         </div>
       </section>
-{/* CONTACT */}
+
+      {/* CONTACT */}
       <section
         id="contact"
         className="py-20 px-6 md:px-20 bg-black text-white"
@@ -331,27 +304,27 @@ export default function institutpastoralpage() {
             </h3>
 
             <ul className="space-y-3 text-gray-400">
-          <li>
-            <Link href="/" className="hover:text-white transition-colors">
-              Accueil
-            </Link>
-          </li>
-          <li>
-            <Link href="/nos-eglises" className="hover:text-white transition-colors">
-              Nos églises
-            </Link>
-          </li>
-          <li>
-            <Link href="/medias" className="hover:text-white transition-colors">
-              Espace médias
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="hover:text-white transition-colors">
-              Contact
-            </Link>
-          </li>
-        </ul>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Accueil
+                </Link>
+              </li>
+              <li>
+                <Link href="/nos-eglises" className="hover:text-white transition-colors">
+                  Nos églises
+                </Link>
+              </li>
+              <li>
+                <Link href="/medias" className="hover:text-white transition-colors">
+                  Espace médias
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
           <div>
@@ -377,6 +350,8 @@ export default function institutpastoralpage() {
           © 2026 ERPEVAI - Tous droits réservés
         </div>
       </section>
+
+      <DonationModal isOpen={isDonationOpen} onClose={() => setIsDonationOpen(false)} />
     </main>
   );
 }

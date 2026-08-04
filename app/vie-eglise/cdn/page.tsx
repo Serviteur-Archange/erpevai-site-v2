@@ -1,8 +1,18 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import DonationModal from '../../DonationModal';
 
 export default function CdnPage() {
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setIsDonationOpen(true);
+    window.addEventListener('open-donation', handleOpen);
+    return () => window.removeEventListener('open-donation', handleOpen);
+  }, []);
+
   return (
     <main className="min-h-screen bg-white">
       
@@ -48,9 +58,9 @@ export default function CdnPage() {
                 <Link href="/vie-eglise/notre-histoire" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
                   Notre histoire
                 </Link>
-<Link href="/vie-eglise/cdn" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-  Le CDN
-</Link>
+                <Link href="/vie-eglise/cdn" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                  Le CDN
+                </Link>
                 <Link href="/vie-eglise/departements" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
                   Nos départements
                 </Link>
@@ -61,21 +71,19 @@ export default function CdnPage() {
             </div>
           </div>
 
-          <a href="#" className="hover:text-orange-200 transition">
-            Nos églises
-          </a>
+          <Link href="/Nos-eglises" className="hover:text-orange-200 transition">Nos églises</Link>
 
           <a href="#" className="hover:text-orange-200 transition">
             Espace médias
           </a>
-<button
-  onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors"
->
-  Faire un don
-</button>
-          </nav>
-        </header>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors cursor-pointer"
+          >
+            Faire un don
+          </button>
+        </nav>
+      </header>
 
       {/* 2. SECTION BANNIÈRE */}
       <section 
@@ -116,7 +124,28 @@ export default function CdnPage() {
           </div>
         </div>
 
-        {/* 4. SECTION LES MISSIONS STRATÉGIQUES */}
+        {/* 4. SECTION ORGANIGRAMME DU CDN (AJOUTÉ ICI) */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold text-blue-950 uppercase tracking-wide mb-2">
+              Organigramme du CDN
+            </h3>
+            <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full mb-3"></div>
+            <p className="text-gray-600 max-w-xl mx-auto">
+              Visualisez la hiérarchie et l'organisation structurelle du Conseil de Direction National.
+            </p>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-8 shadow-md flex justify-center items-center overflow-hidden">
+            <img
+              src="/Organ.jpg"
+              alt="Organigramme du Conseil de Direction National"
+              className="w-full max-w-4xl h-auto rounded-xl shadow-inner object-contain"
+            />
+          </div>
+        </div>
+
+        {/* 5. SECTION LES MISSIONS STRATÉGIQUES */}
         <div className="mb-16">
           <h3 className="text-2xl font-bold text-blue-950 text-center mb-8 uppercase tracking-wide">
             Nos missions stratégiques
@@ -161,7 +190,7 @@ export default function CdnPage() {
           </div>
         </div>
 
-        {/* 5. SECTION UN ENGAGEMENT POUR L'AVENIR */}
+        {/* 6. SECTION UN ENGAGEMENT POUR L'AVENIR */}
         <div className="bg-blue-950 text-white p-8 md:p-12 rounded-3xl text-center shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
           <h3 className="text-2xl font-bold mb-4 text-orange-400">
@@ -172,18 +201,17 @@ export default function CdnPage() {
           </p>
         </div>
       </section>
-            {/* CONTACT */}
+
+      {/* CONTACT */}
       <section
         id="contact"
         className="py-20 px-6 md:px-20 bg-black text-white"
       >
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
-
           <div>
             <h3 className="text-3xl font-bold mb-6">
               ERPEVAI
             </h3>
-
             <p className="text-gray-400 leading-8">
               Église de Réveil du Plein Évangile
               Vision Apostolique Internationale.
@@ -194,40 +222,37 @@ export default function CdnPage() {
             <h3 className="text-2xl font-bold mb-6">
               Navigation
             </h3>
-
             <ul className="space-y-3 text-gray-400">
-          <li>
-            <Link href="/" className="hover:text-white transition-colors">
-              Accueil
-            </Link>
-          </li>
-          <li>
-            <Link href="/nos-eglises" className="hover:text-white transition-colors">
-              Nos églises
-            </Link>
-          </li>
-          <li>
-            <Link href="/medias" className="hover:text-white transition-colors">
-              Espace médias
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="hover:text-white transition-colors">
-              Contact
-            </Link>
-          </li>
-        </ul>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Accueil
+                </Link>
+              </li>
+              <li>
+                <Link href="/Nos-eglises" className="hover:text-white transition-colors">
+                  Nos églises
+                </Link>
+              </li>
+              <li>
+                <Link href="/medias" className="hover:text-white transition-colors">
+                  Espace médias
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
           <div>
             <h3 className="text-2xl font-bold mb-6">
               Contact
             </h3>
-
             <p className="text-gray-400">
               Bouaké - Côte d’Ivoire
             </p>
-
             <p className="text-gray-400 mt-3">
               WhatsApp : 0709172800
             </p>
@@ -235,13 +260,18 @@ export default function CdnPage() {
               Service Communication : 05946345
             </p>
           </div>
-
         </div>
 
         <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500">
           © 2026 ERPEVAI - Tous droits réservés
         </div>
       </section>
+
+      {/* MODAL DE DON */}
+      <DonationModal 
+        isOpen={isDonationOpen} 
+        onClose={() => setIsDonationOpen(false)} 
+      />
     </main>
   );
 }

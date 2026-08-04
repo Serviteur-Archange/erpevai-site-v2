@@ -3,8 +3,14 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-export default function DonationModal() {
-  const [isOpen, setIsOpen] = useState(false);
+// 1. Définissez l'interface pour les propriétés acceptées
+interface DonationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// 2. Passez ces props en paramètre de votre fonction
+export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
   
   // États pour le Mobile Money
   const [showMobileMoney, setShowMobileMoney] = useState(false);
@@ -15,22 +21,19 @@ export default function DonationModal() {
   const [selectedBankMethod, setSelectedBankMethod] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleOpen = () => setIsOpen(true);
-    window.addEventListener('open-donation', handleOpen);
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
     };
     if (isOpen) window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('open-donation', handleOpen);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 
   const handleClose = () => {
-    setIsOpen(false);
+    // On appelle la fonction onClose reçue du parent pour fermer proprement
+    onClose();
     setShowMobileMoney(false);
     setSelectedOperator(null);
     setShowBankOptions(false);
@@ -123,14 +126,24 @@ export default function DonationModal() {
 
               {/* CONTENU MOBILE MONEY */}
               {showMobileMoney && selectedOperator && (
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl text-center">
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl text-center" onClick={(e) => e.stopPropagation()}>
                   {selectedOperator === 'wave' && (
                     <div className="flex flex-col items-center py-2">
-                      <p className="text-sm text-cyan-400 font-bold mb-3">Scannez ce QR Code Wave pour votre don :</p>
-                      <div className="w-44 h-44 bg-white p-3 rounded-xl relative shadow-lg">
+                      <p className="text-sm text-cyan-400 font-bold mb-3">Scannez ce QR Code Wave ou ouvrez l'application :</p>
+                      
+                      <a 
+                        href="https://pay.wave.com/m/M_ci_fT716aP02z1a/c/?amount=&currency=XOF"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-[#11b3e5] hover:bg-[#0ea5d4] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 mb-4 text-sm"
+                      >
+                        <span>📱 Ouvrir l'application Wave</span>
+                      </a>
+
+                      <div className="w-44 h-44 bg-white p-3 rounded-xl relative shadow-lg mb-3">
                         <Image src="/Cadre Culte Wave.png" alt="QR Code Wave" fill className="object-contain p-1" />
                       </div>
-                      <p className="text-xs text-slate-400 mt-3">Ou numéro : <span className="text-white font-bold">07 48 75 10 83</span></p>
+                      <p className="text-xs text-slate-400">Ou numéro : <span className="text-white font-bold">+225 07 48 75 10 83</span></p>
                     </div>
                   )}
                   {selectedOperator === 'orange' && (
@@ -176,7 +189,6 @@ export default function DonationModal() {
                   </svg>
                 </div>
 
-                {/* SOUS-MENU AVEC LES 3 OPTIONS BANQUE */}
                 {showBankOptions && (
                   <div className="mt-4 pt-4 border-t border-slate-800 grid grid-cols-3 gap-2" onClick={(e) => e.stopPropagation()}>
                     <button 
@@ -201,16 +213,13 @@ export default function DonationModal() {
                 )}
               </div>
 
-              {/* AFFICHAGE DES CONTENUS BANCAIRES ET LOGOS */}
               {showBankOptions && selectedBankMethod && (
                 <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl text-left" onClick={(e) => e.stopPropagation()}>
                   
-                  {/* OPTION 1 : CARTE BANCAIRE (RIB / VISA / MASTERCARD) */}
                   {selectedBankMethod === 'card' && (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                         <p className="text-sm text-blue-400 font-bold">Virement Bancaire (EcoBank)</p>
-                        {/* Logos Visa & Mastercard en SVG */}
                         <div className="flex gap-1.5 bg-white/10 px-2 py-1 rounded-md">
                           <span className="text-[10px] font-black tracking-tighter text-cyan-400">VISA</span>
                           <span className="text-[10px] font-black tracking-tighter text-red-400">MC</span>
@@ -226,11 +235,9 @@ export default function DonationModal() {
                     </div>
                   )}
 
-                  {/* OPTION 2 : PAYPAL */}
                   {selectedBankMethod === 'paypal' && (
                     <div className="space-y-3 text-center py-2">
                       <div className="flex justify-center items-center gap-2 mb-2">
-                        {/* Petit logo symbolique PayPal */}
                         <span className="bg-white/10 px-3 py-1 rounded-full text-xs font-black text-indigo-400 tracking-wider">Paypal</span>
                       </div>
                       <p className="text-sm text-slate-300">Cliquez sur le bouton pour faire un don sécurisé en ligne :</p>
@@ -245,7 +252,6 @@ export default function DonationModal() {
                     </div>
                   )}
 
-                  {/* OPTION 3 : COMPTE COOPEC */}
                   {selectedBankMethod === 'copec' && (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-2">

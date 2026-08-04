@@ -1,11 +1,22 @@
 'use client';
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DonationModal from '../../DonationModal';
 
 export default function NosDepartementsPage() {
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenDonation = () => setIsDonationOpen(true);
+    window.addEventListener('open-donation', handleOpenDonation as EventListener);
+    return () => {
+      window.removeEventListener('open-donation', handleOpenDonation as EventListener);
+    };
+  }, []);
+
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* 1. HEADER (BARRE DE MENU) */}
       <header className="relative z-40 w-full h-20 bg-green-600/95 backdrop-blur-md border-b border-green-500/20 px-4 md:px-8 flex items-center justify-between text-white">
         <div className="relative flex items-center h-full">
           <Link href="/" className="absolute top--5 left-0 w-20 h-20 md:w-28 md:h-28 z-50 drop-shadow">
@@ -33,34 +44,33 @@ export default function NosDepartementsPage() {
             <button className="hover:text-green-200 transition flex items-center gap-1">
               Vie de l'Église ▾
             </button>
-<div className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100 py-2">
-  <Link href="/vie-eglise/notre-histoire" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
-    Notre histoire
-  </Link>
-  <Link href="/vie-eglise/cdn" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
-    Le CDN
-  </Link>
-  <Link href="/vie-eglise/departements" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 font-semibold">
-    Nos départements
-  </Link>
-  <Link href="/vie-eglise/institut-pastoral" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
-    Institut Pastoral
-  </Link>
-</div>
+            <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100 py-2">
+              <Link href="/vie-eglise/notre-histoire" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
+                Notre histoire
+              </Link>
+              <Link href="/vie-eglise/cdn" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
+                Le CDN
+              </Link>
+              <Link href="/vie-eglise/departements" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 font-semibold">
+                Nos départements
+              </Link>
+              <Link href="/vie-eglise/institut-pastoral" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
+                Institut Pastoral
+              </Link>
+            </div>
           </div>
 
-          <Link href="/nos-eglises" className="hover:text-green-200 transition">Nos églises</Link>
+          <Link href="/Nos-eglises" className="hover:text-green-200 transition">Nos églises</Link>
           <Link href="/espace-medias" className="hover:text-green-200 transition">Espace médias</Link>
-    <button
-  onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-  className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors"
->
-  Faire un don
-</button>
-          </nav>
-        </header>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors"
+          >
+            Faire un don
+          </button>
+        </nav>
+      </header>
 
-      {/* 2. BANNIÈRE HERO */}
       <section className="relative h-[400px] flex items-center justify-center border-b border-gray-200">
         <div className="absolute inset-0 z-0">
           <Image
@@ -85,7 +95,6 @@ export default function NosDepartementsPage() {
         </div>
       </section>
 
-      {/* 3. SECTION FOCUS 1 : DIACRES ET DIACONESSES (FOND BLEU ROYAL) */}
       <section className="max-w-6xl mx-auto px-4 pt-16 pb-8">
         <div className="bg-[#E6F0FA] rounded-2xl shadow-xl overflow-hidden border border-blue-200 grid grid-cols-1 lg:grid-cols-12 gap-0">
           
@@ -134,14 +143,13 @@ export default function NosDepartementsPage() {
               alt="Département des Diacres et Diaconesses"
               fill
               className="object-cover"
-              sizes="(max-w-1024px) 100vw, 40vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
             />
           </div>
 
         </div>
       </section>
 
-      {/* 4. SECTION FOCUS 2 : DÉPARTEMENT DES FEMMES (FOND ROSE PURE) */}
       <section className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-[#FFF0F5] rounded-2xl shadow-xl overflow-hidden border border-pink-200 grid grid-cols-1 lg:grid-cols-12 gap-0">
           
@@ -151,7 +159,7 @@ export default function NosDepartementsPage() {
               alt="Département des Femmes"
               fill
               className="object-cover"
-              sizes="(max-w-1024px) 100vw, 40vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
             />
           </div>
 
@@ -197,7 +205,6 @@ export default function NosDepartementsPage() {
         </div>
       </section>
 
-      {/* 5. SECTION FOCUS 3 : DÉPARTEMENT DES JEUNES (FOND JAUNE PURE) */}
       <section className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-[#FFFFE0] rounded-2xl shadow-xl overflow-hidden border border-yellow-200 grid grid-cols-1 lg:grid-cols-12 gap-0">
           
@@ -253,14 +260,13 @@ export default function NosDepartementsPage() {
               alt="Département des Jeunes"
               fill
               className="object-cover"
-              sizes="(max-w-1024px) 100vw, 40vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
             />
           </div>
 
         </div>
       </section>
 
-      {/* 6. SECTION FOCUS 4 : DÉPARTEMENT DES ENFANTS (FOND BLANC STANDARD AVEC SES CONTENUS COMPLET) */}
       <section className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 grid grid-cols-1 lg:grid-cols-12 gap-0">
           
@@ -270,7 +276,7 @@ export default function NosDepartementsPage() {
               alt="Département des Enfants"
               fill
               className="object-contain p-8"
-              sizes="(max-w-1024px) 100vw, 40vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
             />
           </div>
 
@@ -315,7 +321,7 @@ export default function NosDepartementsPage() {
             <div className="mt-8 pt-6 border-t border-gray-100">
               <h4 className="text-sm font-bold text-gray-800 uppercase mb-2">Une Responsabilité Sacrée pour l'Avenir</h4>
               <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
-                Le Département des Enfants est un maillon essentiel dans la vision de l'Église de Réveil du Plein Évangile. En soutenant activement les parents dans l'éducation chrétienne de leurs enfants, l'équipe dirigée par la Monitrice Kaboré Chantal prépares avec rigueur, amour et dévouement la génération future de disciples, de serviteurs et de citoyens intègres pour la gloire de Dieu.
+                Le Département des Enfants est un maillon essentiel dans la vision de l'Église de Réveil du Plein Évangile. En soutenant activement les parents dans l'éducation chrétienne de leurs enfants, l'équipe dirigée par la Monitrice Kaboré Chantal prépare avec rigueur, amour et dévouement la génération future de disciples, de serviteurs et de citoyens intègres pour la gloire de Dieu.
               </p>
             </div>
           </div>
@@ -323,7 +329,6 @@ export default function NosDepartementsPage() {
         </div>
       </section>
 
-      {/* CONTACT */}
       <section
         id="contact"
         className="py-20 px-6 md:px-20 bg-black text-white"
@@ -347,27 +352,27 @@ export default function NosDepartementsPage() {
             </h3>
 
             <ul className="space-y-3 text-gray-400">
-          <li>
-            <Link href="/" className="hover:text-white transition-colors">
-              Accueil
-            </Link>
-          </li>
-          <li>
-            <Link href="/nos-eglises" className="hover:text-white transition-colors">
-              Nos églises
-            </Link>
-          </li>
-          <li>
-            <Link href="/medias" className="hover:text-white transition-colors">
-              Espace médias
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="hover:text-white transition-colors">
-              Contact
-            </Link>
-          </li>
-        </ul>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Accueil
+                </Link>
+              </li>
+              <li>
+                <Link href="/nos-eglises" className="hover:text-white transition-colors">
+                  Nos églises
+                </Link>
+              </li>
+              <li>
+                <Link href="/medias" className="hover:text-white transition-colors">
+                  Espace médias
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
           <div>
@@ -393,6 +398,11 @@ export default function NosDepartementsPage() {
           © 2026 ERPEVAI - Tous droits réservés
         </div>
       </section>
+      {/* MODAL DE DON */}
+      <DonationModal 
+        isOpen={isDonationOpen} 
+        onClose={() => setIsDonationOpen(false)} 
+      />
     </main>
   );
 }
