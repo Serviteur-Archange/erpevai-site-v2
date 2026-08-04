@@ -17,59 +17,7 @@ export default function NosDepartementsPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <header className="relative z-40 w-full h-20 bg-green-600/95 backdrop-blur-md border-b border-green-500/20 px-4 md:px-8 flex items-center justify-between text-white">
-        <div className="relative flex items-center h-full">
-          <Link href="/" className="absolute top--5 left-0 w-20 h-20 md:w-28 md:h-28 z-50 drop-shadow">
-            <Image
-              src="/logo.png"
-              alt="Logo ERPEVAI"
-              fill
-              className="object-contain"
-            />
-          </Link>
-          <div className="pl-24 md:pl-32 flex flex-col justify-center">
-            <h1 className="text-lg md:text-xl font-bold leading-tight">
-              Église de Réveil du Plein Évangile
-            </h1>
-            <p className="text-xs text-green-100 hidden sm:block">
-              Vision Apostolique Internationale
-            </p>
-          </div>
-        </div>
 
-        <nav className="hidden md:flex gap-8 text-lg font-medium items-center">
-          <Link href="/" className="hover:text-green-200 transition">Accueil</Link>
-          
-          <div className="relative group py-2">
-            <button className="hover:text-green-200 transition flex items-center gap-1">
-              Vie de l'Église ▾
-            </button>
-            <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100 py-2">
-              <Link href="/vie-eglise/notre-histoire" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
-                Notre histoire
-              </Link>
-              <Link href="/vie-eglise/cdn" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
-                Le CDN
-              </Link>
-              <Link href="/vie-eglise/departements" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 font-semibold">
-                Nos départements
-              </Link>
-              <Link href="/vie-eglise/institut-pastoral" className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">
-                Institut Pastoral
-              </Link>
-            </div>
-          </div>
-
-          <Link href="/Nos-eglises" className="hover:text-green-200 transition">Nos églises</Link>
-          <Link href="/espace-medias" className="hover:text-green-200 transition">Espace médias</Link>
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors"
-          >
-            Faire un don
-          </button>
-        </nav>
-      </header>
 
       <section className="relative h-[400px] flex items-center justify-center border-b border-gray-200">
         <div className="absolute inset-0 z-0">
