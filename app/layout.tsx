@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Navbar from '@/components/Navbar'; // 1. Importation du Navbar
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +18,8 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <main>
+        <Navbar /> {/* 2. Affichage du Navbar global */}
+        <main className="pt-20"> {/* pt-20 évite que le contenu ne se cache sous la navbar fixed */}
           {children}
         </main>
       </body>
