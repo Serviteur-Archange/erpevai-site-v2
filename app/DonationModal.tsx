@@ -3,15 +3,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-// 1. Définissez l'interface pour les propriétés acceptées
 interface DonationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// 2. Passez ces props en paramètre de votre fonction
 export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
-  
   // États pour le Mobile Money
   const [showMobileMoney, setShowMobileMoney] = useState(false);
   const [selectedOperator, setSelectedOperator] = useState<string | null>(null);
@@ -32,7 +29,6 @@ export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
   }, [isOpen]);
 
   const handleClose = () => {
-    // On appelle la fonction onClose reçue du parent pour fermer proprement
     onClose();
     setShowMobileMoney(false);
     setSelectedOperator(null);

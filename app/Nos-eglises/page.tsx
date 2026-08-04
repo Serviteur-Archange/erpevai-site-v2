@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
+import DonationModal from '@/components/DonationModal';
 export default function NosEglisesPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
