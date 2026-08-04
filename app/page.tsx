@@ -3,8 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import MarqueeCommuniques from '@/app/components/MarqueeCommuniques';
-import DonationModal from '@/app/DonationModal';
+import DonationModal from './DonationModal';
 
 const GALERIES_DATA = {
   dedicace: {
