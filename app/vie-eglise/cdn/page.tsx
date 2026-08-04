@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Image from "next/image";
 import Link from "next/link";
 import DonationModal from '../../DonationModal';
 
@@ -16,75 +15,6 @@ export default function CdnPage() {
   return (
     <main className="min-h-screen bg-white">
       
-      {/* 1. BARRE DE MENU (NAVBAR COMPLÈTE EN ORANGE VIF) */}
-      <header className="relative z-20 w-full h-20 bg-orange-600/95 backdrop-blur-md border-b border-orange-500 flex items-center justify-between px-6 md:px-12 text-white shadow-lg">
-        <div className="relative flex items-center h-full">
-          <a href="/" className="absolute top--5 left-0 w-20 h-20 md:w-28 md:h-28 z-30 drop-shadow inline-block transition-transform hover:scale-105">
-            <Image
-              src="/logo.png"
-              alt="Logo ERPEVAI"
-              fill
-              className="object-contain"
-            />
-          </a>
-
-          <div className="pl-24 md:pl-32 flex flex-col justify-center">
-            <h1 className="text-lg md:text-xl font-bold leading-tight">
-              Église de Réveil du Plein Évangile
-            </h1>
-            <p className="text-xs text-orange-100 hidden sm:block">
-              Vision Apostolique Internationale
-            </p>
-          </div>
-        </div>
-
-        <nav className="hidden md:flex gap-8 text-lg text-white font-medium items-center">
-          <Link href="/" className="hover:text-orange-200 transition">
-            Accueil
-          </Link>
-
-          {/* MENU DÉROULANT */}
-          <div className="relative group">
-            <button className="flex items-center gap-1 hover:text-orange-200 transition text-white font-medium text-lg h-full py-2">
-              Vie de l'Église
-              <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {/* Dropdown */}
-            <div className="absolute left-0 mt-0 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-100">
-              <div className="py-2">
-                <Link href="/vie-eglise/notre-histoire" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                  Notre histoire
-                </Link>
-                <Link href="/vie-eglise/cdn" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                  Le CDN
-                </Link>
-                <Link href="/vie-eglise/departements" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                  Nos départements
-                </Link>
-                <Link href="/vie-eglise/institut-pastoral" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                  Institut Pastoral
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <Link href="/Nos-eglises" className="hover:text-orange-200 transition">Nos églises</Link>
-
-          <a href="#" className="hover:text-orange-200 transition">
-            Espace médias
-          </a>
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-xl shadow transition-colors cursor-pointer"
-          >
-            Faire un don
-          </button>
-        </nav>
-      </header>
-
       {/* 2. SECTION BANNIÈRE */}
       <section 
         className="relative h-[55vh] flex flex-col items-center justify-center bg-cover bg-center text-center px-4"
@@ -124,7 +54,7 @@ export default function CdnPage() {
           </div>
         </div>
 
-        {/* 4. SECTION ORGANIGRAMME DU CDN (AJOUTÉ ICI) */}
+        {/* 4. SECTION ORGANIGRAMME DU CDN */}
         <div className="mb-16">
           <div className="text-center mb-8">
             <h3 className="text-3xl font-bold text-blue-950 uppercase tracking-wide mb-2">
