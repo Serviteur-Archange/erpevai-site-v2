@@ -115,7 +115,7 @@ export default function NotreHistoire() {
         <header className="relative z-30 w-full bg-blue-950/95 backdrop-blur-md border-b border-blue-900 text-white shadow-lg">
           <div className="max-w-7xl mx-auto h-20 flex items-center justify-between px-3 sm:px-6">
             
-            {/* Logo et Titre (avec flex-1 et min-w-0 pour éviter qu'ils n'écrasent le bouton) */}
+            {/* Logo et Titre */}
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="relative w-10 h-10 sm:w-16 sm:h-16 flex-shrink-0">
                 <Image
@@ -189,10 +189,10 @@ export default function NotreHistoire() {
               </button>
             </nav>
 
-            {/* BOUTON HAMBURGER MOBILE (Forcé à rester visible à droite) */}
+            {/* BOUTON HAMBURGER MOBILE */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-white focus:outline-none p-2 ml-2 flex-shrink-0 z-50"
+              className="md:hidden text-white focus:outline-none p-2 ml-2 flex-shrink-0 z-50 cursor-pointer"
               aria-label="Menu"
             >
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -392,7 +392,7 @@ export default function NotreHistoire() {
               Notre vision est simple mais profonde : nous croyons qu'une église doit avant tout 
               être en bonne santé pour pouvoir grandir de manière solide et durable. Pour nous, 
               la croissance n'est pas seulement une affaire de chiffres, c'est le reflet d'une 
-              vie spiritualle authentique et vibrante. C'est pourquoi nous mettons un point d'honneur 
+              vie spirituelle authentique et vibrante. C'est pourquoi nous mettons un point d'honneur 
               à cultiver la qualité de notre relation avec Dieu et les uns avec les autres. 
               <span className="block mt-4 font-semibold italic text-sky-200">
                 "Une église saine est une église forte, capable de transformer des vies."
