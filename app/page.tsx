@@ -333,7 +333,7 @@ export default function NotreHistoire() {
               </div>
 
               <div className="bg-white shadow-xl rounded-2xl p-6">
-                <h3 className="text-4xl font-black text-red-600">+90000</h3>
+                <h3 className="text-4xl font-black text-red-600">+9000</h3>
                 <p>Âmes restaurées</p>
               </div>
             </div>
