@@ -138,7 +138,7 @@ export default function CdnPage() {
 
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-8 shadow-md flex justify-center items-center overflow-hidden">
             <img
-              src="/Organ.jpg"
+              src="/Organ2.jpg"
               alt="Organigramme du Conseil de Direction National"
               className="w-full max-w-4xl h-auto rounded-xl shadow-inner object-contain"
             />
