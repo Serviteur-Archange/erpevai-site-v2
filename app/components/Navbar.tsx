@@ -8,7 +8,7 @@ export default function Navbar() {
   const [isMobileVieEgliseOpen, setIsMobileVieEgliseOpen] = useState(false);
 
   return (
-    <header className="relative z-30 w-full bg-blue-950/95 backdrop-blur-md border-b border-blue-900 text-white shadow-lg">
+    <header className="fixed top-0 left-0 z-50 w-full bg-blue-950/95 backdrop-blur-md border-b border-blue-900 text-white shadow-lg">
       <div className="max-w-7xl mx-auto h-20 flex items-center justify-between px-3 sm:px-6">
         
         {/* Logo et Titre */}
