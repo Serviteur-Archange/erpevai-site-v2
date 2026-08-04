@@ -1,12 +1,13 @@
 'use client';
+
 import { useState, useEffect } from 'react';
-import Image from "next/image";
-import Link from "next/link";
-import DonationModal from '../DonationModal';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function NosEglisesPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleOpen = () => setIsDonationOpen(true);
@@ -15,71 +16,107 @@ export default function NosEglisesPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      
+    <main className="min-h-screen bg-gray-50 pt-20">
       {/* 1. HEADER GLOBAL */}
-<header className="relative z-40 w-full h-20 bg-red-600 backdrop-blur-md border-b border-red-500 shadow-lg">
-  <div className="relative flex items-center h-full px-4 md:px-8 justify-between max-w-7xl mx-auto">
-    
-    <div className="relative flex items-center h-full">
-      <Link href="/" className="absolute top-[-5px] left-0 w-20 h-20 md:w-28 md:h-28 z-50 drop-shadow-md">
-        <Image
-          src="/logo.png"
-          alt="Logo ERPEVAI"
-          fill
-          className="object-contain"
-        />
-      </Link>
-      <div className="pl-24 md:pl-32 flex flex-col justify-center">
-        <h1 className="text-lg md:text-xl font-bold leading-tight text-white">
-          Église de Réveil du Plein Évangile
-        </h1>
-        <p className="text-sm text-white/80 hidden sm:block">
-          Vision Apostolique Internationale
-        </p>
-      </div>
-    </div>
-
-    <div className="flex items-center gap-8">
-      <nav className="hidden md:flex items-center gap-8 text-lg font-medium text-white relative">
-        <Link href="/" className="hover:text-red-200 transition-colors">Accueil</Link>
-        
-        <div 
-          className="relative py-2 cursor-pointer"
-          onMouseEnter={() => setIsDropdownOpen(true)}
-          onMouseLeave={() => setIsDropdownOpen(false)}
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        >
-          <button className="hover:text-red-200 transition-colors flex items-center gap-1 focus:outline-none">
-            Vie de l'Église
-            <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 text-slate-800 flex flex-col z-50">
-              <Link href="/vie-eglise/notre-histoire" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Notre histoire</Link>
-              <Link href="/vie-eglise/cdn" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Le CDN</Link>
-              <Link href="/vie-eglise/departements" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-green-600">Nos départements</Link>
-              <Link href="/vie-eglise/institut-pastoral" className="px-4 py-2.5 bg-slate-50 text-sm font-bold transition-colors text-green-600">Institut Pastoral</Link>
+      <header className="fixed top-0 left-0 z-40 w-full h-20 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div className="relative flex items-center h-full px-4 md:px-8 justify-between max-w-7xl mx-auto">
+          
+          {/* LOGO ET TITRE */}
+          <div className="relative flex items-center h-full">
+            <Link href="/" className="absolute top-[-5px] left-0 w-20 h-20 md:w-28 md:h-28 z-50 drop-shadow-md">
+              <Image
+                src="/logo.png"
+                alt="Logo ERPEVAI"
+                fill
+                className="object-contain"
+              />
+            </Link>
+            <div className="pl-24 md:pl-32 flex flex-col justify-center">
+              <h1 className="text-lg md:text-xl font-bold leading-tight text-slate-900">
+                Église de Réveil du Plein Évangile
+              </h1>
+              <p className="text-sm text-slate-500 hidden sm:block">
+                Vision Apostolique Internationale
+              </p>
             </div>
-          )}
+          </div>
+
+          {/* NAVIGATION DESKTOP & BOUTON DON */}
+          <div className="flex items-center gap-4 md:gap-8">
+            <nav className="hidden md:flex items-center gap-8 text-lg font-medium text-slate-700 relative">
+              <Link href="/" className="hover:text-red-600 transition-colors">Accueil</Link>
+              
+              {/* Dropdown Desktop "Vie de l'Église" */}
+              <div 
+                className="relative py-2 cursor-pointer"
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <button className="hover:text-red-600 transition-colors flex items-center gap-1 focus:outline-none">
+                  Vie de l'Église
+                  <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 text-slate-800 flex flex-col z-50">
+                    <Link href="/vie-eglise/notre-histoire" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-red-600">Notre histoire</Link>
+                    <Link href="/vie-eglise/cdn" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-red-600">Le CDN</Link>
+                    <Link href="/vie-eglise/departements" className="px-4 py-2.5 hover:bg-slate-50 text-sm font-semibold transition-colors text-slate-700 hover:text-red-600">Nos départements</Link>
+                    <Link href="/vie-eglise/institut-pastoral" className="px-4 py-2.5 bg-slate-50 text-sm font-bold transition-colors text-red-600">Institut Pastoral</Link>
+                  </div>
+                )}
+              </div>
+
+              <Link href="/Nos-eglises" className="hover:text-red-600 transition-colors">Nos églises</Link>
+              <Link href="/medias" className="hover:text-red-600 transition-colors">Espace médias</Link>
+            </nav>
+
+            {/* BOUTON FAIRE UN DON */}
+            <button 
+              onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 md:px-6 rounded-xl text-sm transition-all shadow-md"
+            >
+              Faire un don
+            </button>
+
+            {/* BOUTON HAMBURGER */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden text-slate-800 focus:outline-none p-2"
+              aria-label="Menu"
+            >
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <Link href="/Nos-eglises" className="hover:text-red-200 transition-colors">Nos églises</Link>
-        <Link href="/medias" className="hover:text-red-200 transition-colors">Espace médias</Link>
-      </nav>
+        {/* MENU DÉROULANT MOBILE */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-200 shadow-2xl py-4 px-6 flex flex-col gap-4 text-slate-800 text-lg font-medium z-50">
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-600 transition-colors py-1">Accueil</Link>
+            
+            <div className="flex flex-col gap-2 py-1 border-t border-slate-100 pt-3">
+              <span className="text-slate-400 text-sm font-bold uppercase tracking-wider">Vie de l'Église</span>
+              <Link href="/vie-eglise/notre-histoire" onClick={() => setIsMobileMenuOpen(false)} className="pl-4 text-base hover:text-red-600 py-1">› Notre histoire</Link>
+              <Link href="/vie-eglise/cdn" onClick={() => setIsMobileMenuOpen(false)} className="pl-4 text-base hover:text-red-600 py-1">› Le CDN</Link>
+              <Link href="/vie-eglise/departements" onClick={() => setIsMobileMenuOpen(false)} className="pl-4 text-base hover:text-red-600 py-1">› Nos départements</Link>
+              <Link href="/vie-eglise/institut-pastoral" onClick={() => setIsMobileMenuOpen(false)} className="pl-4 text-base hover:text-red-600 py-1">› Institut Pastoral</Link>
+            </div>
 
-      <button 
-        onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-md"
-      >
-        Faire un don
-      </button>
-    </div>
-  </div>
-</header>
+            <Link href="/Nos-eglises" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-600 transition-colors py-1 border-t border-slate-100 pt-3">Nos églises</Link>
+            <Link href="/medias" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-600 transition-colors py-1">Espace médias</Link>
+          </div>
+        )}
+      </header>
 
       {/* 2. HERO SECTION CORRIGÉE (Le texte n'est plus masqué) */}
       <section className="relative min-h-[65vh] flex items-center justify-center text-center px-4 pt-20 pb-24 overflow-hidden bg-slate-950 text-white">
