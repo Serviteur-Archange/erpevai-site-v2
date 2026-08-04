@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DonationModal from './DonationModal'
 import MarqueeCommuniques from './components/MarqueeCommuniques';
+
 const GALERIES_DATA = {
   dedicace: {
     title: "Cérémonie de Dédicace",
@@ -59,7 +60,8 @@ export default function NotreHistoire() {
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileVieEgliseOpen, setIsMobileVieEgliseOpen] = useState(false);
-
+  const [selectedCommunique, setSelectedCommunique] = useState<{ title: string; date: string; content: string } | null>(null);
+  
   // Liste des images pour le diaporama du Hero
   const heroImages = [
     "/church.jpg",
@@ -68,7 +70,6 @@ export default function NotreHistoire() {
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Écoute l'événement pour ouvrir le pop-up de don et gère le défilement du Hero
   useEffect(() => {
     const handleOpen = () => setIsDonationOpen(true);
     window.addEventListener('open-donation', handleOpen);
@@ -88,8 +89,6 @@ export default function NotreHistoire() {
 
       {/* HERO + NAVBAR AVEC DIAPORAMA EN ARRIÈRE-PLAN */}
       <section className="relative bg-slate-950 overflow-hidden">
-        
-        {/* Images du carrousel en fondu */}
         {heroImages.map((src, index) => (
           <div
             key={src}
@@ -106,30 +105,28 @@ export default function NotreHistoire() {
             />
           </div>
         ))}
-
-        {/* Overlay sombre pour la lisibilité */}
         <div className="absolute inset-0 bg-blue-900/60 z-10"></div>
-
-
-
-        {/* HERO CONTENT */}
         <div className="relative z-20 flex flex-col items-center justify-center text-center h-[80vh] px-6 text-white">
           <h1 className="text-5xl md:text-8xl font-black leading-tight">
             EGLISE DE REVEIL DU PLEIN EVANGILE
           </h1>
-
           <p className="mt-6 text-2xl md:text-4xl font-light">
             Vision Apostolique Internationale
           </p>
-
           <div className="mt-8 bg-red-600 px-8 py-4 rounded-full text-xl font-bold shadow-2xl">
             ÉCLAIRER • RESTAURER • CONQUÉRIR
           </div>
         </div>
       </section>
 
-      {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
-      <MarqueeCommuniques />
+     {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
+      <MarqueeCommuniques 
+        onCommuniqueClick={(item) => setSelectedCommunique({
+          title: item.title,
+          date: item.created_at ? new Date(item.created_at).toLocaleDateString() : (item.category || "Annonce"),
+          content: item.content
+        })}
+      />
 
       {/* A PROPOS */}
       <section id="apropos" className="py-24 px-6 md:px-20 bg-gray-100">
@@ -138,29 +135,24 @@ export default function NotreHistoire() {
             <h2 className="text-5xl font-black mb-8 text-blue-900">
               A PROPOS DE NOUS
             </h2>
-
             <p className="text-xl leading-9 text-gray-700">
               L' Église de Réveil du Plein Évangile - Vision Apostolique Internationale est un ministère dynamique dédié à la transformation et à l'accompagnement des vies. Fondée sur une foi solide et un espoir inébranlable, notre communauté grandit avec force pour guider des milliers de personnes vers leur destinée en Jésus-Christ.
             </p>
-
             <p className="text-xl leading-9 text-gray-700 mt-6">
               Notre vision est d’éclairer les nations par la parole de Dieu,
               restaurer les vies brisées et conquérir les âmes pour Christ.
             </p>
-
             <div className="mt-10 flex gap-4 flex-wrap">
               <div className="bg-white shadow-xl rounded-2xl p-6">
                 <h3 className="text-4xl font-black text-blue-700">plus de 30 ans</h3>
                 <p>Années de ministère</p>
               </div>
-
               <div className="bg-white shadow-xl rounded-2xl p-6">
                 <h3 className="text-4xl font-black text-red-600">+9000</h3>
                 <p>Âmes restaurées</p>
               </div>
             </div>
           </div>
-
           <div className="bg-white p-6 rounded-3xl shadow-2xl text-center">
             <Image
               src="/fondateur.png"
@@ -183,7 +175,6 @@ export default function NotreHistoire() {
       {/* PRESIDENT */}
       <section id="president" className="pt-24 px-4 md:px-20 bg-gradient-to-r from-sky-400 to-blue-700 text-white overflow-hidden">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-end">
-          
           <div className="flex justify-center w-full h-full items-center">
             <div className="bg-white p-3 rounded-3xl shadow-2xl inline-block leading-[0]">
               <Image
@@ -196,16 +187,13 @@ export default function NotreHistoire() {
               />
             </div>
           </div>
-
           <div className="pb-24">
             <h2 className="text-4xl md:text-5xl font-black text-white mb-8 leading-tight">
               MESSAGE DU PRÉSIDENT DU CONSEIL DE DIRECTION NATIONAL
             </h2>
-            
             <h3 className="text-2xl md:text-3xl font-bold text-sky-100 mb-6">
               Apôtre Henri Fayol Koffi
             </h3>
-            
             <p className="text-lg md:text-xl leading-relaxed text-white/90">
               Bienvenue dans notre communauté ! C'est une joie immense de vous accueillir sur notre 
               plateforme numérique. Que vous nous découvriez pour la première fois ou que vous 
@@ -220,7 +208,6 @@ export default function NotreHistoire() {
               </span>
             </p>
           </div>
-
         </div>
       </section>
 
@@ -242,6 +229,7 @@ export default function NotreHistoire() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
             
+            {/* CARTE 1 : Directive Nationale */}
             <div style={{ backgroundColor: '#1f2937', borderRadius: '16px', padding: '24px', border: '1px solid #374151', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -257,11 +245,19 @@ export default function NotreHistoire() {
                   Message important du Conseil National de Direction concernant les orientations spirituelles et administratives applicables dans toutes nos assemblées.
                 </p>
               </div>
-              <button style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
+              <button 
+                onClick={() => setSelectedCommunique({
+                  title: "Directive Nationale pour le mois d'août",
+                  date: "28 Juil 2026",
+                  content: "Message important du Conseil National de Direction concernant les orientations spirituelles et administratives applicables dans toutes nos assemblées. Retrouvez l'ensemble des directives à observer pour une marche harmonieuse dans l'unité et la discipline."
+                })}
+                style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
+              >
                 Lire le communiqué complet &rarr;
               </button>
             </div>
 
+            {/* CARTE 2 : Grande Convention Internationale */}
             <div style={{ backgroundColor: '#1f2937', borderRadius: '16px', padding: '24px', border: '1px solid #374151', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -277,11 +273,19 @@ export default function NotreHistoire() {
                   Informations relatives à l'organisation, aux délégations et aux programmes de notre prochain rassemblement global.
                 </p>
               </div>
-              <button style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
+              <button 
+                onClick={() => setSelectedCommunique({
+                  title: "Grande Convention Internationale",
+                  date: "À venir",
+                  content: "Informations relatives à l'organisation, aux délégations et aux programmes de notre prochain rassemblement global. Retrouvez ici tous les détails logistiques, les dates clés et les dispositions prises pour faire de cet événement un moment inoubliable sous la conduite du Saint-Esprit."
+                })}
+                style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
+              >
                 Consulter les détails &rarr;
               </button>
             </div>
 
+            {/* CARTE 3 : Formation des Responsables Locaux */}
             <div style={{ backgroundColor: '#1f2937', borderRadius: '16px', padding: '24px', border: '1px solid #374151', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -297,7 +301,14 @@ export default function NotreHistoire() {
                   Calendrier des sessions de formation pastorale et administrative initiées par le secrétariat général national.
                 </p>
               </div>
-              <button style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
+              <button 
+                onClick={() => setSelectedCommunique({
+                  title: "Formation des Responsables Locaux",
+                  date: "Important",
+                  content: "Calendrier des sessions de formation pastorale et administrative initiées par le secrétariat général national. Préparez-vous à renforcer vos compétences pour un meilleur encadrement des fidèles et une gestion optimale des assemblées locales."
+                })}
+                style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
+              >
                 Voir le calendrier &rarr;
               </button>
             </div>
@@ -315,8 +326,6 @@ export default function NotreHistoire() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            
-            {/* CARTE 1 */}
             <div 
               onClick={() => setActiveGalerie('dedicace')}
               className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
@@ -334,7 +343,6 @@ export default function NotreHistoire() {
               </div>
             </div>
 
-            {/* CARTE 2 */}
             <div 
               onClick={() => setActiveGalerie('messages')}
               className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
@@ -352,7 +360,6 @@ export default function NotreHistoire() {
               </div>
             </div>
 
-            {/* CARTE 3 */}
             <div 
               onClick={() => setActiveGalerie('programmes')}
               className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
@@ -377,18 +384,15 @@ export default function NotreHistoire() {
         {activeGalerie && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
             <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl text-left">
-              
               <button 
                 onClick={() => setActiveGalerie(null)}
                 className="absolute top-4 right-4 bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-600 font-bold p-2 px-4 rounded-full transition-colors text-sm"
               >
                 ✕ Fermer
               </button>
-
               <h3 className="text-2xl font-black text-slate-900 mb-6 uppercase border-b pb-3">
                 {GALERIES_DATA[activeGalerie].title}
               </h3>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {GALERIES_DATA[activeGalerie].media.map((item, index) => (
                   <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9]">
@@ -400,7 +404,6 @@ export default function NotreHistoire() {
                   </div>
                 ))}
               </div>
-
             </div>
           </div>
         )}
@@ -412,13 +415,11 @@ export default function NotreHistoire() {
           <h2 className="text-5xl font-black mb-8">
             VEUX-TU DONNER TA VIE À JÉSUS ?
           </h2>
-
           <p className="text-2xl leading-10 text-blue-100">
             Jésus-Christ t’aime et veut transformer ta vie.
             Si tu désires parler à un pasteur et commencer une nouvelle vie avec Dieu,
             contacte-nous maintenant.
           </p>
-
           <a
             href="https://wa.me/2250709172800"
             target="_blank"
@@ -441,7 +442,6 @@ export default function NotreHistoire() {
               Vision Apostolique Internationale.
             </p>
           </div>
-
           <div>
             <h3 className="text-2xl font-bold mb-6">
               Navigation
@@ -469,7 +469,6 @@ export default function NotreHistoire() {
               </li>
             </ul>
           </div>
-
           <div>
             <h3 className="text-2xl font-bold mb-6">
               Contact
@@ -485,7 +484,6 @@ export default function NotreHistoire() {
             </p>
           </div>
         </div>
-
         <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500">
           © 2026 ERPEVAI - Tous droits réservés
         </div>
@@ -495,6 +493,35 @@ export default function NotreHistoire() {
           </a>
         </div>
       </section>
+
+      {/* MODALE DU COMMUNIQUÉ */}
+      {selectedCommunique && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 text-left">
+          <div className="bg-gray-900 border border-gray-800 text-white rounded-3xl max-w-lg w-full p-6 md:p-8 relative shadow-2xl">
+            <button 
+              onClick={() => setSelectedCommunique(null)}
+              className="absolute top-4 right-4 bg-gray-800 hover:bg-red-900/50 text-gray-300 hover:text-red-400 font-bold p-2 px-4 rounded-full transition-colors text-sm cursor-pointer"
+            >
+              ✕ Fermer
+            </button>
+            <span className="text-xs font-semibold uppercase tracking-wider text-red-400 bg-red-950 px-3 py-1 rounded-full border border-red-900">
+              {selectedCommunique.date}
+            </span>
+            <h3 className="text-2xl font-bold mt-4 mb-3 text-white">{selectedCommunique.title}</h3>
+            <p className="text-gray-300 leading-relaxed text-sm md:text-base">
+              {selectedCommunique.content}
+            </p>
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setSelectedCommunique(null)}
+                className="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition cursor-pointer"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODALE DE DON (POP-UP) */}
       <DonationModal 

@@ -1,10 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { supabase } from '@/supabase'; // ou ton chemin vers supabase
+import { supabase } from '@/supabase';
 
-export default function MarqueeCommuniques() {
+export default function MarqueeCommuniques({ onCommuniqueClick }) {
   const [communiques, setCommuniques] = useState([]);
-  // ... le reste de ton code
 
   useEffect(() => {
     async function fetchCommuniques() {
@@ -40,13 +39,14 @@ export default function MarqueeCommuniques() {
         {duplicatedCommuniques.map((item, index) => (
           <div 
             key={index} 
-            className="flex items-center mx-4 bg-slate-800/90 border border-slate-700 px-5 py-4 rounded-xl shadow-md min-w-[380px] max-w-[480px]"
+            onClick={() => onCommuniqueClick && onCommuniqueClick(item)}
+            className="flex items-center mx-4 bg-slate-800/90 border border-slate-700 px-5 py-4 rounded-xl shadow-md min-w-[380px] max-w-[480px] cursor-pointer group hover:border-red-500 transition-colors"
           >
             <span className="bg-red-600 text-white text-xs font-bold uppercase px-3 py-1.5 rounded-lg mr-4 shrink-0 tracking-wide">
               {item.category || 'Annonce'}
             </span>
             <div className="flex flex-col justify-center overflow-hidden">
-              <h4 className="text-white font-semibold text-base truncate">{item.title}</h4>
+              <h4 className="text-white font-semibold text-base truncate group-hover:text-red-400 transition-colors">{item.title}</h4>
               <p className="text-gray-300 text-sm truncate mt-0.5">{item.content}</p>
             </div>
           </div>
