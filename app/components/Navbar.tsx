@@ -73,9 +73,9 @@ export default function Navbar() {
 
           <Link href="/Nos-eglises" className="hover:text-blue-300 transition">Nos églises</Link>
 
-          <a href="#" className="hover:text-blue-300 transition">
+          <Link href="/espace-medias" className="hover:text-blue-300 transition">
             Espace médias
-          </a>
+          </Link>
           
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('open-donation'))}
@@ -166,13 +166,13 @@ export default function Navbar() {
             Nos églises
           </Link>
 
-          <a 
-            href="#" 
+          <Link 
+            href="/espace-medias" 
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-lg font-medium hover:text-blue-300 transition py-2 border-b border-blue-900/50"
           >
             Espace médias
-          </a>
+          </Link>
 
           <button
             onClick={() => {
