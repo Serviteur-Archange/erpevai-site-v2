@@ -1,54 +1,54 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import Navbar from "../components/Navbar";
 import DonationModal from "../DonationModal";
+
 export default function EspaceMedias() {
   const [isLiveOpen, setIsLiveOpen] = useState(false);
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenDonation = () => setIsDonationOpen(true);
+    window.addEventListener("open-donation", handleOpenDonation);
+    return () => {
+      window.removeEventListener("open-donation", handleOpenDonation);
+    };
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-50 relative">
-      <Navbar />
-
-      {/* BANDEAU DIRECT CLIGNOTANT (STYLE CHAÎNE TV) */}
-      <div 
-        onClick={() => setIsLiveOpen(true)}
-        className="bg-red-600 text-white py-3 px-4 text-center cursor-pointer font-bold flex items-center justify-center gap-3 shadow-md hover:bg-red-700 transition-colors animate-pulse"
-      >
-        <span className="w-3 h-3 bg-white rounded-full animate-ping" />
-        <span>🔴 DIRECT TV (OBS) : Le Culte en direct du studio (Cliquez pour Regarder)</span>
-      </div>
+     <Navbar />
       
       {/* En-tête */}
       <section className="relative text-white py-16 px-6 text-center overflow-hidden">
-  {/* Image de fond en plein affichage */}
-  <div className="absolute inset-0 z-0">
-    <img 
-      src="/Broadcast Wallpapers - Wallpaper Cave.jpeg" 
-      alt="Espace Médias" 
-      className="w-full h-full object-cover"
-    />
-    {/* Un voile sombre léger pour garder le texte bien lisible par-dessus l'image */}
-    <div className="absolute inset-0 bg-black/40"></div>
-  </div>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/Broadcast Wallpapers - Wallpaper Cave.jpeg" 
+            alt="Espace Médias" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
 
-  {/* Contenu de l'en-tête */}
-  <div className="relative z-10">
-    <h1 className="text-4xl md:text-6xl font-black mb-4">ESPACE MÉDIAS</h1>
-    <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
-      Suivez notre chaîne TV en direct, nos prédications, replays vidéo et galeries photos.
-    </p>
-  </div>
-</section>
+        <div className="relative z-10">
+          <h1 className="text-4xl md:text-6xl font-black mb-4">ESPACE MÉDIAS</h1>
+          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+            Suivez notre chaîne TV en direct, nos prédications, replays vidéo et galeries photos.
+          </p>
+          {/* Le bouton "Faire un don" a été retiré d'ici */}
+        </div>
+      </section>
 
       {/* SECTION YOUTUBE */}
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="flex items-center justify-between mb-8">
-    <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
-  <svg className="w-8 h-8 text-red-600 fill-current" viewBox="0 0 24 24">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-  </svg>
-  SECTION YOUTUBE
-</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
+            <svg className="w-8 h-8 text-red-600 fill-current" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            SECTION YOUTUBE
+          </h2>
           <span className="text-sm font-semibold text-red-600 bg-red-50 px-4 py-2 rounded-full">
             En direct & Replays
           </span>
@@ -76,12 +76,12 @@ export default function EspaceMedias() {
       {/* SECTION VIDEOS */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
         <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
-  <svg className="w-8 h-8 text-blue-900 fill-current" viewBox="0 0 24 24">
-    <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
-  </svg>
-  ARCHIVES VIDÉOS & CULTES
-</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
+            <svg className="w-8 h-8 text-blue-900 fill-current" viewBox="0 0 24 24">
+              <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+            </svg>
+            ARCHIVES VIDÉOS & CULTES
+          </h2>
           <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-full">
             Archives & Séries
           </span>
@@ -124,11 +124,11 @@ export default function EspaceMedias() {
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
-  <svg className="w-8 h-8 text-blue-900 fill-current" viewBox="0 0 24 24">
-    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-  </svg>
-  GALERIE PHOTOS
-</h2>
+            <svg className="w-8 h-8 text-blue-900 fill-current" viewBox="0 0 24 24">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+            GALERIE PHOTOS
+          </h2>
           <span className="text-sm font-semibold text-green-600 bg-green-50 px-4 py-2 rounded-full">
             Galerie Souvenirs
           </span>
@@ -177,51 +177,76 @@ export default function EspaceMedias() {
         </div>
       </section>
 
-      {/* POPUP / MODAL DU DIRECT STYLE TV (OBS) */}
-      {isLiveOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
-          <div className="bg-gray-900 w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden relative border border-gray-800">
-            
-            {/* Barre du haut du popup */}
-            <div className="bg-black/60 text-white px-6 py-4 flex items-center justify-between border-b border-gray-800">
-              <div className="flex items-center gap-3">
-                <span className="w-3 h-3 bg-red-600 rounded-full animate-ping" />
-                <h3 className="font-bold text-lg tracking-wide">ERPEV TV - Diffusion en Direct</h3>
-              </div>
-              <button 
-                onClick={() => setIsLiveOpen(false)}
-                className="text-gray-400 hover:text-white font-bold text-2xl px-2 transition"
-              >
-                &times;
-              </button>
-            </div>
+      {/* SECTION CONTACT / FOOTER */}
+      <section
+        id="contact"
+        className="py-20 px-6 md:px-20 bg-black text-white"
+      >
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
+          <div>
+            <h3 className="text-3xl font-bold mb-6">
+              ERPEVAI
+            </h3>
+            <p className="text-gray-400 leading-8">
+              Église de Réveil du Plein Évangile
+              Vision Apostolique Internationale.
+            </p>
+          </div>
 
-            {/* Corps du popup : Lecteur Vidéo Direct */}
-            <div className="p-4 bg-black flex justify-center items-center">
-              <div className="aspect-video w-full max-h-[75vh] bg-black rounded-lg overflow-hidden flex items-center justify-center relative shadow-inner">
-                <div className="text-center p-6 text-gray-400">
-                  <p className="font-semibold text-white mb-2">📡 En attente du signal OBS Studio...</p>
-                  <p className="text-xs text-gray-500 max-w-md mx-auto">
-                    Le flux vidéo s'affichera ici en temps réel dès que le direct sera lancé depuis la régie.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div>
+            <h3 className="text-2xl font-bold mb-6">
+              Navigation
+            </h3>
+            <ul className="space-y-3 text-gray-400">
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Accueil
+                </Link>
+              </li>
+              <li>
+                <Link href="/Nos-eglises" className="hover:text-white transition-colors">
+                  Nos églises
+                </Link>
+              </li>
+              <li>
+                <Link href="/espace-medias" className="hover:text-white transition-colors">
+                  Espace médias
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-            {/* Pied du popup */}
-            <div className="bg-black/60 px-6 py-4 flex justify-between items-center border-t border-gray-800">
-              <span className="text-xs text-gray-400">Qualité HD • Flux sécurisé direct</span>
-              <button
-                onClick={() => setIsLiveOpen(false)}
-                className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-              >
-                Fermer le direct
-              </button>
-            </div>
-
+          <div>
+            <h3 className="text-2xl font-bold mb-6">
+              Contact
+            </h3>
+            <p className="text-gray-400">
+              Bouaké - Côte d’Ivoire
+            </p>
+            <p className="text-gray-400 mt-3">
+              WhatsApp : 0709172800
+            </p>
+            <p className="text-gray-400 mt-3">
+              Service Communication : 05946345
+            </p>
           </div>
         </div>
-      )}
+
+        <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500">
+          © 2026 ERPEVAI - Tous droits réservés
+        </div>
+      </section>
+
+      {/* MODAL DE DON */}
+      <DonationModal 
+        isOpen={isDonationOpen} 
+        onClose={() => setIsDonationOpen(false)} 
+      />
 
     </main>
   );
