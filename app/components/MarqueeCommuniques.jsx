@@ -1,29 +1,10 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { supabase } from '@/supabase';
 
-export default function MarqueeCommuniques({ onCommuniqueClick }) {
-  const [communiques, setCommuniques] = useState([]);
+export default function MarqueeCommuniques({ communiques = [], onCommuniqueClick }) {
+  // Si aucun communiqué n'est passé en prop, on n'affiche pas le bandeau
+  if (!communiques || communiques.length === 0) return null;
 
-  useEffect(() => {
-    async function fetchCommuniques() {
-      const { data, error } = await supabase
-        .from('communiques')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error("Erreur récupération communiqués:", error);
-      } else {
-        setCommuniques(data || []);
-      }
-    }
-
-    fetchCommuniques();
-  }, []);
-
-  if (!communiques.length) return null;
-
+  // Duplication des communiqués pour créer l'effet de défilement infini fluide
   let duplicatedCommuniques = [...communiques];
   while (duplicatedCommuniques.length < 6) {
     duplicatedCommuniques = [...duplicatedCommuniques, ...communiques];
@@ -46,8 +27,12 @@ export default function MarqueeCommuniques({ onCommuniqueClick }) {
               {item.category || 'Annonce'}
             </span>
             <div className="flex flex-col justify-center overflow-hidden">
-              <h4 className="text-white font-semibold text-base truncate group-hover:text-red-400 transition-colors">{item.title}</h4>
-              <p className="text-gray-300 text-sm truncate mt-0.5">{item.content}</p>
+              <h4 className="text-white font-semibold text-base truncate group-hover:text-red-400 transition-colors">
+                {item.title}
+              </h4>
+              <p className="text-gray-300 text-sm truncate mt-0.5">
+                {item.content}
+              </p>
             </div>
           </div>
         ))}
