@@ -1,14 +1,39 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileVieEgliseOpen, setIsMobileVieEgliseOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  const controlNavbar = () => {
+    if (typeof window !== 'undefined') {
+      if (window.scrollY > lastScrollY && window.scrollY > 80) {
+        setShowNavbar(false);
+        setIsMobileMenuOpen(false); // Ferme aussi le menu mobile si ouvert lors du scroll
+      } else {
+        setShowNavbar(true);
+      }
+      setLastScrollY(window.scrollY);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full bg-blue-950/95 backdrop-blur-md border-b border-blue-900 text-white shadow-lg">
+    <header className={`fixed top-0 left-0 z-50 w-full bg-blue-950/95 backdrop-blur-md border-b border-blue-900 text-white shadow-lg transition-transform duration-300 ${
+      showNavbar ? 'translate-y-0' : '-translate-y-full'
+    }`}>
       <div className="max-w-7xl mx-auto h-20 flex items-center justify-between px-3 sm:px-6">
         
         {/* Logo et Titre */}
