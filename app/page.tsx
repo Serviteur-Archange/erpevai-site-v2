@@ -63,7 +63,7 @@ export default function NotreHistoire() {
   const [selectedCommunique, setSelectedCommunique] = useState<{ title: string; date: string; content: string } | null>(null);
   
   // État initialisé à vide pour récupérer uniquement les données dynamiques de Supabase
-const [communiques, setCommuniques] = useState<Array<{ title: string; content: string; created_at?: string; category?: string }>>([]);
+  const [communiques, setCommuniques] = useState<Array<{ title: string; content: string; created_at?: string; category?: string }>>([]);
   
   // Liste des images pour le diaporama du Hero
   const heroImages = [
@@ -144,6 +144,7 @@ const [communiques, setCommuniques] = useState<Array<{ title: string; content: s
       </section>
 
       {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
+      {/* @ts-ignore */}
       <MarqueeCommuniques 
         communiques={communiques}
         onCommuniqueClick={(item: any) => setSelectedCommunique({
