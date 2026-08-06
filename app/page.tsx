@@ -62,6 +62,9 @@ export default function NotreHistoire() {
   const [isMobileVieEgliseOpen, setIsMobileVieEgliseOpen] = useState(false);
   const [selectedCommunique, setSelectedCommunique] = useState<{ title: string; date: string; content: string } | null>(null);
   
+  // État initialisé à vide pour récupérer uniquement les données dynamiques de Supabase
+  const [communiques, setCommuniques] = useState<any[]>([]);
+  
   // Liste des images pour le diaporama du Hero
   const heroImages = [
     "/church.jpg",
@@ -73,6 +76,27 @@ export default function NotreHistoire() {
   useEffect(() => {
     const handleOpen = () => setIsDonationOpen(true);
     window.addEventListener('open-donation', handleOpen);
+
+    // Charger les communiqués depuis Supabase avec logs de débogage
+    const fetchPublicCommuniques = async () => {
+      try {
+        const response = await fetch('/api/communiques');
+        const result = await response.json();
+
+        if (result.error) {
+          console.error("Erreur API interne :", result.error);
+        } else {
+          console.log("Données reçues de l'API :", result.data);
+          if (result.data && result.data.length > 0) {
+            setCommuniques(result.data);
+          }
+        }
+      } catch (err) {
+        console.error("Erreur critique fetch :", err);
+      }
+    };
+
+    fetchPublicCommuniques();
 
     const slideInterval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
@@ -108,7 +132,7 @@ export default function NotreHistoire() {
         <div className="absolute inset-0 bg-blue-900/60 z-10"></div>
         <div className="relative z-20 flex flex-col items-center justify-center text-center h-[80vh] px-6 text-white">
           <h1 className="text-5xl md:text-8xl font-black leading-tight">
-            EGLISE DE REVEIL DU PLEIN EVANGILE
+            EGLISE DE REVEIL du PLEIN EVANGILE
           </h1>
           <p className="mt-6 text-2xl md:text-4xl font-light">
             Vision Apostolique Internationale
@@ -119,11 +143,12 @@ export default function NotreHistoire() {
         </div>
       </section>
 
-     {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
+      {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
       <MarqueeCommuniques 
-      onCommuniqueClick={(item: any) => setSelectedCommunique({
+        communiques={communiques}
+        onCommuniqueClick={(item: any) => setSelectedCommunique({
           title: item.title,
-          date: item.created_at ? new Date(item.created_at).toLocaleDateString() : (item.category || "Annonce"),
+          date: item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : (item.category || "Annonce"),
           content: item.content
         })}
       />
@@ -211,11 +236,11 @@ export default function NotreHistoire() {
         </div>
       </section>
 
-      {/* SECTION VOLET INFORMATIONS / CONSEIL NATIONAL */}
+      {/* SECTION VOLET INFORMATIONS / CONSEIL NATIONAL (AVEC SLIDER HORIZONTAL) */}
       <div style={{ backgroundColor: '#111827', padding: '80px 16px', color: '#ffffff', width: '100%' }}>
         <div style={{ maxWidth: '1152px', margin: '0 auto' }}>
           
-          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span style={{ backgroundColor: '#dc2626', color: '#ffffff', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', padding: '6px 16px', borderRadius: '9999px' }}>
               Communiqués Officiels
             </span>
@@ -227,93 +252,110 @@ export default function NotreHistoire() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
-            
-            {/* CARTE 1 : Directive Nationale */}
-            <div style={{ backgroundColor: '#1f2937', borderRadius: '16px', padding: '24px', border: '1px solid #374151', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', textTransform: 'uppercase', backgroundColor: '#450a0a', padding: '4px 12px', borderRadius: '6px', border: '1px solid #7f1d1d' }}>
-                    Direction
-                  </span>
-                  <span style={{ fontSize: '12px', color: '#9ca3af' }}>28 Juil 2026</span>
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: '#ffffff' }}>
-                  Directive Nationale pour le mois d'août
-                </h3>
-                <p style={{ color: '#d1d5db', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
-                  Message important du Conseil National de Direction concernant les orientations spirituelles et administratives applicables dans toutes nos assemblées.
-                </p>
-              </div>
-              <button 
-                onClick={() => setSelectedCommunique({
-                  title: "Directive Nationale pour le mois d'août",
-                  date: "28 Juil 2026",
-                  content: "Message important du Conseil National de Direction concernant les orientations spirituelles et administratives applicables dans toutes nos assemblées. Retrouvez l'ensemble des directives à observer pour une marche harmonieuse dans l'unité et la discipline."
-                })}
-                style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
-              >
-                Lire le communiqué complet &rarr;
-              </button>
+          {communiques.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 0', backgroundColor: '#1f2937', borderRadius: '16px', border: '1px solid #374151' }}>
+              <p style={{ color: '#9ca3af', fontSize: '16px' }}>Aucune information nationale pour le moment.</p>
             </div>
-
-            {/* CARTE 2 : Grande Convention Internationale */}
-            <div style={{ backgroundColor: '#1f2937', borderRadius: '16px', padding: '24px', border: '1px solid #374151', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', textTransform: 'uppercase', backgroundColor: '#450a0a', padding: '4px 12px', borderRadius: '6px', border: '1px solid #7f1d1d' }}>
-                    Événement
-                  </span>
-                  <span style={{ fontSize: '12px', color: '#9ca3af' }}>À venir</span>
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: '#ffffff' }}>
-                  Grande Convention Internationale
-                </h3>
-                <p style={{ color: '#d1d5db', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
-                  Informations relatives à l'organisation, aux délégations et aux programmes de notre prochain rassemblement global.
-                </p>
-              </div>
+          ) : (
+            <div style={{ position: 'relative' }}>
+              
+              {/* Bouton Précédent */}
               <button 
-                onClick={() => setSelectedCommunique({
-                  title: "Grande Convention Internationale",
-                  date: "À venir",
-                  content: "Informations relatives à l'organisation, aux délégations et aux programmes de notre prochain rassemblement global. Retrouvez ici tous les détails logistiques, les dates clés et les dispositions prises pour faire de cet événement un moment inoubliable sous la conduite du Saint-Esprit."
-                })}
-                style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
+                onClick={() => {
+                  const container = document.getElementById('slider-communiques');
+                  if (container) container.scrollBy({ left: -350, behavior: 'smooth' });
+                }}
+                style={{
+                  position: 'absolute', left: '-25px', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
+                  backgroundColor: '#1f2937', color: '#ffffff', border: '1px solid #374151',
+                  width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                }}
+                className="hidden md:flex hover:bg-red-600 transition-colors"
               >
-                Consulter les détails &rarr;
+                &#10094;
               </button>
-            </div>
 
-            {/* CARTE 3 : Formation des Responsables Locaux */}
-            <div style={{ backgroundColor: '#1f2937', borderRadius: '16px', padding: '24px', border: '1px solid #374151', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', textTransform: 'uppercase', backgroundColor: '#450a0a', padding: '4px 12px', borderRadius: '6px', border: '1px solid #7f1d1d' }}>
-                    Séminaire
-                  </span>
-                  <span style={{ fontSize: '12px', color: '#9ca3af' }}>Important</span>
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: '#ffffff' }}>
-                  Formation des Responsables Locaux
-                </h3>
-                <p style={{ color: '#d1d5db', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
-                  Calendrier des sessions de formation pastorale et administrative initiées par le secrétariat général national.
-                </p>
+              {/* Conteneur du Slider Horizontal */}
+              <div 
+                id="slider-communiques"
+                style={{ 
+                  display: 'flex', 
+                  gap: '24px', 
+                  overflowX: 'auto', 
+                  scrollSnapType: 'x mandatory', 
+                  scrollbarWidth: 'none', 
+                  msOverflowStyle: 'none',
+                  paddingBottom: '16px',
+                  paddingTop: '4px'
+                }}
+              >
+                {communiques.map((item, index) => (
+                  <div 
+                    key={index} 
+                    style={{ 
+                      flex: '0 0 350px', 
+                      scrollSnapAlign: 'start',
+                      backgroundColor: '#1f2937', 
+                      borderRadius: '16px', 
+                      padding: '24px', 
+                      border: '1px solid #374151', 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      justifyContent: 'space-between',
+                      minHeight: '280px'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', textTransform: 'uppercase', backgroundColor: '#450a0a', padding: '4px 12px', borderRadius: '6px', border: '1px solid #7f1d1d' }}>
+                          {item.category || 'ANNONCE'}
+                        </span>
+                        <span style={{ fontSize: '12px', color: '#9ca3af' }}>
+                          {item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : ''}
+                        </span>
+                      </div>
+                      <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: '#ffffff' }}>
+                        {item.title}
+                      </h3>
+                      <p style={{ color: '#d1d5db', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {item.content}
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => setSelectedCommunique({
+                        title: item.title,
+                        date: item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : (item.category || 'Annonce'),
+                        content: item.content
+                      })}
+                      style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
+                    >
+                      Lire le communiqué complet &rarr;
+                    </button>
+                  </div>
+                ))}
               </div>
-              <button 
-                onClick={() => setSelectedCommunique({
-                  title: "Formation des Responsables Locaux",
-                  date: "Important",
-                  content: "Calendrier des sessions de formation pastorale et administrative initiées par le secrétariat général national. Préparez-vous à renforcer vos compétences pour un meilleur encadrement des fidèles et une gestion optimale des assemblées locales."
-                })}
-                style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
-              >
-                Voir le calendrier &rarr;
-              </button>
-            </div>
 
-          </div>
+              {/* Bouton Suivant */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('slider-communiques');
+                  if (container) container.scrollBy({ left: 350, behavior: 'smooth' });
+                }}
+                style={{
+                  position: 'absolute', right: '-25px', top: '50%', transform: 'translateY(-50%)', zIndex: '10',
+                  backgroundColor: '#1f2937', color: '#ffffff', border: '1px solid #374151',
+                  width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                }}
+                className="hidden md:flex hover:bg-red-600 transition-colors"
+              >
+                &#10095;
+              </button>
+
+            </div>
+          )}
+
         </div>
       </div>
 
