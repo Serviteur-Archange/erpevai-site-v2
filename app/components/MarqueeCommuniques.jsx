@@ -1,10 +1,8 @@
 "use client";
 
 export default function MarqueeCommuniques({ communiques = [], onCommuniqueClick }) {
-  // Si aucun communiqué n'est passé en prop, on n'affiche pas le bandeau
   if (!communiques || communiques.length === 0) return null;
 
-  // Duplication des communiqués pour créer l'effet de défilement infini fluide
   let duplicatedCommuniques = [...communiques];
   while (duplicatedCommuniques.length < 6) {
     duplicatedCommuniques = [...duplicatedCommuniques, ...communiques];
