@@ -145,14 +145,15 @@ export default function NotreHistoire() {
 
       {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
       {/* @ts-ignore */}
-      <MarqueeCommuniques 
-        communiques={communiques}
-        onCommuniqueClick={(item: any) => setSelectedCommunique({
-          title: item.title,
-          date: item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : (item.category || "Annonce"),
-          content: item.content
-        })}
-      />
+     {/* @ts-ignore */}
+<MarqueeCommuniques 
+  communiques={communiques as any}
+  onCommuniqueClick={(item: any) => setSelectedCommunique({
+    title: item.title,
+    date: item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : (item.category || "Annonce"),
+    content: item.content
+  })}
+/>
 
       {/* A PROPOS */}
       <section id="apropos" className="py-24 px-6 md:px-20 bg-gray-100">
