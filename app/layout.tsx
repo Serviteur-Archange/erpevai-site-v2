@@ -1,13 +1,13 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navbar from './components/Navbar';
+import Navbar from '@/app/components/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ERPEVAI-SITE-V2',
-  description: 'Vision Apostolique Internationale',
+  title: 'Église de Réveil du Plein Évangile - ERPEVAI',
+  description: 'Vision Apostolique Internationale - Éclairer, Restaurer, Conquérir',
 };
 
 export default function RootLayout({
@@ -18,8 +18,8 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <Navbar /> {/* 2. Affichage du Navbar global */}
-        <main className="pt-20"> {/* pt-20 évite que le contenu ne se cache sous la navbar fixed */}
+        <Navbar />
+        <main className="pt-20">
           {children}
         </main>
       </body>
