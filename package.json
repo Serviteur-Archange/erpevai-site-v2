@@ -9,10 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.110.9",
+    "@supabase/supabase-js": "^2.112.2",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "yet-another-react-lightbox": "^3.32.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

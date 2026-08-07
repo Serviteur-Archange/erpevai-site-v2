@@ -205,14 +205,25 @@ export default function institutpastoralpage() {
           <p className="text-green-100 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
             Rejoignez l'un de nos parcours en présentiel à Bouaké ou à distance. Contactez dès aujourd'hui notre secrétariat académique pour votre inscription.
           </p>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col sm:flex-row justify-center items-center gap-4">
+            {/* Premier Numéro */}
             <a 
-              href="https://wa.me/+2250709606109" 
+              href="https://wa.me/2250709606109" 
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white hover:bg-slate-100 text-green-700 font-black py-3.5 px-8 rounded-xl transition-all shadow-md text-sm inline-block tracking-wide uppercase"
+              className="bg-white hover:bg-slate-100 text-green-700 font-black py-3.5 px-8 rounded-xl transition-all shadow-md text-sm tracking-wide uppercase"
             >
-              S'inscrire via WhatsApp
+              WhatsApp : 0709606109
+            </a>
+
+            {/* Deuxième Numéro */}
+            <a 
+              href="https://wa.me/2250101112450" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white hover:bg-slate-100 text-green-700 font-black py-3.5 px-8 rounded-xl transition-all shadow-md text-sm tracking-wide uppercase"
+            >
+              WhatsApp : 0101112450
             </a>
           </div>
         </div>

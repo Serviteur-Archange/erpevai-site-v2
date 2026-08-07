@@ -5,43 +5,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DonationModal from './DonationModal'
 import MarqueeCommuniques from './components/MarqueeCommuniques';
+import Gallery from './components/Gallery';
 
 const GALERIES_DATA = {
-  dedicace: {
-    title: "Cérémonie de Dédicace",
-    media: [
-      { type: 'image', src: '/papaetpepe.jpg' },
-      { type: 'image', src: '/IMG_2510.jpg' },
-      { type: 'image', src: '/IMG_2512.jpg' },
-      { type: 'image', src: '/IMG_2513.jpg' },
-      { type: 'image', src: '/IMG_2515.jpg' },
-      { type: 'image', src: '/IMG_2516.jpg' },
-      { type: 'image', src: '/IMG_2518.jpg' },
-      { type: 'image', src: '/IMG_2519.jpg' },
-      { type: 'image', src: '/IMG_2521.jpg' },
-      { type: 'image', src: '/IMG_2522.jpg' },
-      { type: 'image', src: '/IMG_2523.jpg' },
-      { type: 'image', src: '/IMG_2524.jpg' },
-      { type: 'image', src: '/IMG_2525.jpg' },
-      { type: 'image', src: '/IMG_2526.jpg' },
-      { type: 'image', src: '/IMG_2530.jpg' },
-      { type: 'image', src: '/IMG_2531.jpg' },
-      { type: 'image', src: '/IMG_2532.jpg' },
-      { type: 'image', src: '/IMG_2541.jpg' },
-      { type: 'image', src: '/IMG_2542.jpg' },
-      { type: 'image', src: '/IMG_2543.jpg' },
-      { type: 'image', src: '/IMG_2545.jpg' },
-      { type: 'image', src: '/IMG_2547.jpg' },
-      { type: 'image', src: '/IMG_2548.jpg' },
-      { type: 'image', src: '/IMG_2549.jpg' },
-      { type: 'image', src: '/IMG_2550.jpg' },
-      { type: 'image', src: '/IMG_2551.jpg' },
-    ]
-  },
   messages: {
     title: "Messages Inspirants",
     media: [
-      { type: 'video', src: 'https://www.facebook.com/61573283174395/videos/4673697372866751' },
+      { 
+        type: 'video', 
+        src: 'https://www.facebook.com/61573283174395/videos/4673697372866751', 
+        thumbnail: '/Miniatuer Facebook et Youtube.jpg' 
+      },
+      { 
+        type: 'video', 
+        src: 'https://www.facebook.com/share/v/1Cv25GTBm6/', 
+        thumbnail: '/Miniatuer Facebook et Youtube2.jpg' 
+      },
     ]
   },
   programmes: {
@@ -58,14 +37,10 @@ type GalerieKey = keyof typeof GALERIES_DATA;
 export default function NotreHistoire() {
   const [activeGalerie, setActiveGalerie] = useState<GalerieKey | null>(null);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileVieEgliseOpen, setIsMobileVieEgliseOpen] = useState(false);
   const [selectedCommunique, setSelectedCommunique] = useState<{ title: string; date: string; content: string } | null>(null);
   
-  // État initialisé à vide pour récupérer uniquement les données dynamiques de Supabase
   const [communiques, setCommuniques] = useState<Array<{ title: string; content: string; created_at?: string; category?: string }>>([]);
   
-  // Liste des images pour le diaporama du Hero
   const heroImages = [
     "/church.jpg",
     "/Photo2.jpg",
@@ -77,7 +52,6 @@ export default function NotreHistoire() {
     const handleOpen = () => setIsDonationOpen(true);
     window.addEventListener('open-donation', handleOpen);
 
-    // Charger les communiqués depuis Supabase avec logs de débogage
     const fetchPublicCommuniques = async () => {
       try {
         const response = await fetch('/api/communiques');
@@ -145,15 +119,14 @@ export default function NotreHistoire() {
 
       {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
       {/* @ts-ignore */}
-     {/* @ts-ignore */}
-<MarqueeCommuniques 
-  communiques={communiques as any}
-  onCommuniqueClick={(item: any) => setSelectedCommunique({
-    title: item.title,
-    date: item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : (item.category || "Annonce"),
-    content: item.content
-  })}
-/>
+      <MarqueeCommuniques 
+        communiques={communiques as any}
+        onCommuniqueClick={(item: any) => setSelectedCommunique({
+          title: item.title,
+          date: item.created_at ? item.created_at.split('T')[0].split('-').reverse().join('/') : (item.category || "Annonce"),
+          content: item.content
+        })}
+      />
 
       {/* A PROPOS */}
       <section id="apropos" className="py-24 px-6 md:px-20 bg-gray-100">
@@ -171,11 +144,11 @@ export default function NotreHistoire() {
             </p>
             <div className="mt-10 flex gap-4 flex-wrap">
               <div className="bg-white shadow-xl rounded-2xl p-6">
-                <h3 className="text-4xl font-black text-blue-700">plus de 30 ans</h3>
+                <h3 className="text-4xl font-black text-blue-700">+30 ans</h3>
                 <p>Années de ministère</p>
               </div>
               <div className="bg-white shadow-xl rounded-2xl p-6">
-                <h3 className="text-4xl font-black text-red-600">+9000</h3>
+                <h3 className="text-4xl font-black text-red-600">+30.000</h3>
                 <p>Âmes restaurées</p>
               </div>
             </div>
@@ -361,7 +334,7 @@ export default function NotreHistoire() {
         </div>
       </div>
 
-      {/* MÉDIAS */}
+      {/* MÉDIAS & GALERIE SUPABASE */}
       <section id="medias" className="py-24 px-6 md:px-20 bg-gray-100">
         <div className="max-w-6xl mx-auto text-center">
           
@@ -369,29 +342,14 @@ export default function NotreHistoire() {
             MÉDIAS & ÉVÉNEMENTS
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div 
-              onClick={() => setActiveGalerie('dedicace')}
-              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
-            >
-              <div className="relative aspect-[4/3] w-full">
-                <Image src="/papaetpepe.jpg" alt="Événement" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                  NOTRE GALERIE PHOTO
-                </h3>
-                <p className="mt-4 text-gray-600">
-                  Explorez l'histoire en images de la Vision Apostolique Internationale. Des cultes mémorables aux cérémonies officielles, découvrez les temps forts qui marquent la vie de nos églises.
-                </p>
-              </div>
-            </div>
+          <Gallery />
 
+          <div className="grid md:grid-cols-2 gap-8 mt-16">
             <div 
               onClick={() => setActiveGalerie('messages')}
-              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 text-left"
             >
-              <div className="relative aspect-[4/3] w-full">
+              <div className="relative aspect-[16/9] w-full">
                 <Image src="/Visuel Video Programme.jpg" alt="Messages" fill className="object-cover" />
               </div>
               <div className="p-6">
@@ -406,9 +364,9 @@ export default function NotreHistoire() {
 
             <div 
               onClick={() => setActiveGalerie('programmes')}
-              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 text-left"
             >
-              <div className="relative aspect-[4/3] w-full">
+              <div className="relative aspect-[16/9] w-full">
                 <Image src="/516388134_718770764228625_8196039677422972509_n.jpg" alt="Programmes" fill className="object-cover" />
               </div>
               <div className="p-6">
@@ -420,11 +378,11 @@ export default function NotreHistoire() {
                 </p>
               </div>
             </div>
-
           </div>
+
         </div>
 
-        {/* POPUP LIGHTBOX */}
+        {/* POPUP LIGHTBOX POUR LES MESSAGES / VIDÉOS */}
         {activeGalerie && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
             <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl text-left">
@@ -439,11 +397,25 @@ export default function NotreHistoire() {
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {GALERIES_DATA[activeGalerie].media.map((item, index) => (
-                  <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9]">
+                  <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-100 aspect-[16/9] flex items-center justify-center">
                     {item.type === 'image' ? (
                       <Image src={item.src} alt={`Média ${index}`} fill className="object-cover" />
                     ) : (
-                      <video src={item.src} controls className="w-full h-full object-cover" />
+                      <a 
+                        href={item.src} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-full h-full relative group block"
+                      >
+                        {item.thumbnail ? (
+                          <Image src={item.thumbnail} alt="Vidéo" fill className="object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-blue-600 flex items-center justify-center text-white font-bold">▶</div>
+                        )}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold">
+                          Voir la vidéo sur Facebook
+                        </div>
+                      </a>
                     )}
                   </div>
                 ))}
@@ -464,13 +436,24 @@ export default function NotreHistoire() {
             Si tu désires parler à un pasteur et commencer une nouvelle vie avec Dieu,
             contacte-nous maintenant.
           </p>
-          <a
-            href="https://wa.me/2250709172800"
-            target="_blank"
-            className="inline-block mt-10 bg-green-500 hover:bg-green-600 transition px-10 py-5 rounded-full text-2xl font-bold shadow-2xl"
-          >
-            WhatsApp : 0709172800
-          </a>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10">
+            <a
+              href="https://wa.me/2250709172800"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 transition px-8 py-4 rounded-full text-xl font-bold shadow-2xl flex items-center justify-center"
+            >
+              WhatsApp : 0709172800
+            </a>
+            <a
+              href="https://wa.me/2250545423103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 transition px-8 py-4 rounded-full text-xl font-bold shadow-2xl flex items-center justify-center"
+            >
+              WhatsApp : 0545423103
+            </a>
+          </div>
         </div>
       </section>
 
