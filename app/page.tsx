@@ -409,19 +409,32 @@ export default function NotreHistoire() {
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {GALERIES_DATA[activeGalerie].media.map((item, index) => (
-                  <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9] flex items-center justify-center">
+                  <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9] flex items-center justify-center group">
                     <a 
                       href={item.src} 
-                      type="video" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="w-full h-full relative group flex flex-col items-center justify-center bg-blue-950 text-white p-4 text-center hover:bg-blue-900 transition-colors"
+                      className="w-full h-full relative flex flex-col items-center justify-center text-white p-4 text-center"
                     >
-                      <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl font-bold shadow-lg mb-2 group-hover:scale-110 transition-transform">
-                        ▶
+                      {item.thumbnail ? (
+                        <>
+                          <img 
+                            src={item.thumbnail} 
+                            alt="Miniature" 
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                          />
+                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 bg-blue-950 group-hover:bg-blue-900 transition-colors" />
+                      )}
+
+                      <div className="relative z-10 flex flex-col items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl font-bold shadow-lg mb-2 group-hover:scale-110 transition-transform">
+                          ▶
+                        </div>
+                        <span className="font-semibold text-sm text-white drop-shadow-md">Voir sur Facebook</span>
                       </div>
-                      <span className="font-semibold text-sm text-blue-100">Voir la Vidéo / Reel sur Facebook</span>
-                      <span className="text-xs text-gray-400 mt-1 truncate max-w-[250px]">{item.src}</span>
                     </a>
                   </div>
                 ))}
