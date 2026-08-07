@@ -152,14 +152,14 @@ export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
                   {selectedOperator === 'moov' && (
                     <div className="py-2">
                       <p className="text-sm text-emerald-400 font-bold mb-1">Numéro Moov Money :</p>
-                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">01 71 72 45 36</p>
+                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">01 XX XX XX XX</p>
                       <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
                     </div>
                   )}
                   {selectedOperator === 'mtn' && (
                     <div className="py-2">
                       <p className="text-sm text-yellow-400 font-bold mb-1">Numéro MTN Money :</p>
-                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">05 45 94 63 45</p>
+                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">05 XX XX XX XX</p>
                       <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
                     </div>
                   )}

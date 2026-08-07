@@ -36,12 +36,101 @@ export default function EspaceMedias() {
           <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
             Suivez notre chaîne TV en direct, nos prédications, replays vidéo et galeries photos.
           </p>
-          {/* Le bouton "Faire un don" a été retiré d'ici */}
+        </div>
+      </section>
+
+      {/* SECTION PROJET : RÉVEIL TV (RTV) */}
+      <section className="max-w-7xl mx-auto px-6 py-16">
+        <div className="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl border border-blue-800/50 relative overflow-hidden">
+          
+          <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div className="relative z-10">
+            
+            {/* En-tête avec Logo RTV */}
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 mb-10">
+              <div className="space-y-4 text-center lg:text-left">
+                <span className="bg-red-600 text-white text-xs font-bold px-9 py-3 rounded-full uppercase tracking-wider inline-block">
+                  Vision & Avenir
+                </span>
+                <h2 className="text-3xl md:text-4xl font-black flex items-center justify-center lg:justify-start gap-3">
+                  RÉVEIL TV (RTV) <span className="text-red-500 text-lg font-normal">| La Télé du Réveil</span>
+                </h2>
+                <p className="text-gray-300 max-w-xl">
+                  À l'image des grandes chaînes chrétiennes, découvrez le projet officiel de notre chaîne de télévision dédiée à la propagation de l'Évangile, des miracles et de la Parole de Dieu 24h/24.
+                </p>
+              </div>
+
+              {/* Affichage du Logo RTV */}
+              <div className="bg-white p-4 rounded-2xl shadow-xl flex items-center justify-center border border-slate-200 w-48 h-48 flex-shrink-0">
+                <img 
+                  src="/RTV.png" 
+                  alt="Logo Réveil TV" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Grille : Lecteur / Présentation + Mise en situation (Micro) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+              
+              {/* Aperçu / Lecteur fictif de Réveil TV */}
+              <div className="relative aspect-video bg-black/60 rounded-2xl overflow-hidden border border-slate-700 flex flex-col items-center justify-center text-center p-6 shadow-inner">
+                <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mb-4 text-red-500 animate-pulse border border-red-500/30">
+                  <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                    <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0-1.9-.9-1.9-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
+                    <path d="M10 9l5 3-5 3z"/>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold mb-2">Bientôt sur vos écrans</h3>
+                <p className="text-gray-300 text-sm">
+                  Retrouvez prochainement les flux officiels de RTV, les programmes spéciaux et les cultes en direct.
+                </p>
+              </div>
+
+              {/* Image de mise en situation (Le Micro RTV) */}
+              <div className="relative aspect-video bg-black/60 rounded-2xl overflow-hidden border border-slate-700 shadow-inner group">
+                <img 
+                  src="/micro.jpg" 
+                  alt="micro.jpg" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
+                  <span className="text-xs font-semibold bg-red-600 text-white px-3 py-1 rounded-md">
+                    Matériel & Couverture RTV
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Grille des programmes prévus sur Réveil TV */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+                <div className="text-red-400 text-2xl mb-3">🔥</div>
+                <h4 className="font-bold text-lg mb-1">Cultes en Direct</h4>
+                <p className="text-gray-300 text-sm">Vibrez au rythme des célébrations dominicales et des grands programmes de réveil en direct.</p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+                <div className="text-red-400 text-2xl mb-3">📖</div>
+                <h4 className="font-bold text-lg mb-1">Enseignements & Formations</h4>
+                <p className="text-gray-300 text-sm">Des programmes riches pour fortifier votre foi et grandir dans la stature de Christ.</p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+                <div className="text-red-400 text-2xl mb-3">✨</div>
+                <h4 className="font-bold text-lg mb-1">Miracles & Témoignages</h4>
+                <p className="text-gray-300 text-sm">Revivez la puissance de Dieu à l'œuvre à travers les guérisons et les témoignages poignants.</p>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
       {/* SECTION YOUTUBE */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
+      <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
             <svg className="w-8 h-8 text-red-600 fill-current" viewBox="0 0 24 24">
@@ -232,7 +321,7 @@ export default function EspaceMedias() {
               WhatsApp : 0709172800
             </p>
             <p className="text-gray-400 mt-3">
-              Service Communication : 05946345
+              Service Communication : XXXXXXXXXX
             </p>
           </div>
         </div>
