@@ -48,11 +48,11 @@ export default function NosEglisesPage() {
             <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">de couverture nationale</p>
           </div>
           <div className="space-y-1 border-y md:border-y-0 md:border-x border-slate-800 py-4 md:py-0">
-            <p className="text-4xl font-black text-blue-400">4</p>
+            <p className="text-4xl font-black text-blue-400">10</p>
             <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">grandes régions pastorales</p>
           </div>
           <div className="space-y-1">
-            <p className="text-4xl font-black text-amber-500">~+6000</p>
+            <p className="text-4xl font-black text-amber-500">+6000</p>
             <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">fidèles à travers la Côted'Ivoire</p>
           </div>
         </div>

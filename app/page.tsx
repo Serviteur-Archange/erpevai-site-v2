@@ -48,6 +48,7 @@ type GalerieKey = keyof typeof GALERIES_DATA;
 
 export default function NotreHistoire() {
   const [activeGalerie, setActiveGalerie] = useState<GalerieKey | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const [selectedCommunique, setSelectedCommunique] = useState<{ title: string; date: string; content: string } | null>(null);
   
@@ -118,7 +119,7 @@ export default function NotreHistoire() {
         <div className="absolute inset-0 bg-blue-900/60 z-10"></div>
         <div className="relative z-20 flex flex-col items-center justify-center text-center h-[80vh] px-6 text-white">
           <h1 className="text-5xl md:text-8xl font-black leading-tight">
-            EGLISE DE REVEIL du PLEIN EVANGILE
+            EGLISE DE REVEIL DU PLEIN EVANGILE
           </h1>
           <p className="mt-6 text-2xl md:text-4xl font-light">
             Vision Apostolique Internationale
@@ -399,29 +400,59 @@ export default function NotreHistoire() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
             <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl text-left">
               <button 
-                onClick={() => setActiveGalerie(null)}
-                className="absolute top-4 right-4 bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-600 font-bold p-2 px-4 rounded-full transition-colors text-sm cursor-pointer"
+                onClick={() => {
+                  setActiveGalerie(null);
+                  setSelectedVideo(null);
+                }}
+                className="absolute top-4 right-4 bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-600 font-bold p-2 px-4 rounded-full transition-colors text-sm cursor-pointer z-20"
               >
                 ✕ Fermer
               </button>
+              
               <h3 className="text-2xl font-black text-slate-900 mb-6 uppercase border-b pb-3">
                 {activeGalerie === 'programmes' ? "Nos Vidéos & Reels Facebook" : GALERIES_DATA[activeGalerie].title}
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {GALERIES_DATA[activeGalerie].media.map((item, index) => (
-                  <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9] flex items-center justify-center group">
-                    <a 
-                      href={item.src} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="w-full h-full relative flex flex-col items-center justify-center text-white p-4 text-center"
+
+              {/* SI UNE VIDÉO EST SÉLECTIONNÉE : ON AFFICHE LE GRAND LECTEUR */}
+              {selectedVideo ? (
+                <div className="space-y-4">
+                  <button 
+                    onClick={() => setSelectedVideo(null)}
+                    className="text-blue-600 hover:underline font-semibold text-sm flex items-center gap-1 cursor-pointer"
+                  >
+                    &larr; Retour à la liste des vidéos
+                  </button>
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black aspect-[16/9] w-full">
+                    <iframe 
+                      src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(selectedVideo)}&show_text=false&width=800&autoplay=true`}
+                      width="100%" 
+                      height="100%" 
+                      style={{ border: 'none', overflow: 'hidden' }} 
+                      scrolling="no" 
+                      frameBorder="0" 
+                      allowFullScreen={true}
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      title="Grand lecteur vidéo Facebook"
+                      className="w-full h-full absolute inset-0"
+                    />
+                  </div>
+                </div>
+              ) : (
+                /* SINON : GRILLE DES MINIATURES */
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {GALERIES_DATA[activeGalerie].media.map((item, index) => (
+                    <div 
+                      key={index} 
+                      onClick={() => setSelectedVideo(item.src)}
+                      className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9] flex items-center justify-center group cursor-pointer"
                     >
                       {item.thumbnail ? (
                         <>
-                          <img 
+                          <Image 
                             src={item.thumbnail} 
                             alt="Miniature" 
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                            fill
+                            className="absolute inset-0 object-cover transition-transform duration-300 group-hover:scale-105" 
                           />
                           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
                         </>
@@ -433,12 +464,13 @@ export default function NotreHistoire() {
                         <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl font-bold shadow-lg mb-2 group-hover:scale-110 transition-transform">
                           ▶
                         </div>
-                        <span className="font-semibold text-sm text-white drop-shadow-md">Voir sur Facebook</span>
+                        <span className="font-semibold text-sm text-white drop-shadow-md">Regarder la vidéo</span>
                       </div>
-                    </a>
-                  </div>
-                ))}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
             </div>
           </div>
         )}
