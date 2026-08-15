@@ -28,8 +28,6 @@ export default function NotreHistoire() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-blue-900/20"></div>
 
-        
-
         {/* HERO */}
         <div className="relative z-10 py-24 px-6 md:px-20 text-center text-white flex flex-col items-center">
           <h1 className="text-5xl md:text-7xl font-black mb-8">
@@ -116,7 +114,81 @@ export default function NotreHistoire() {
             </div>
           </div>
 
-          {/* === RUBRIQUE 5 (VISION APOSTOLIQUE INTERNATIONALE) === */}
+          {/* --- NOUVELLE RUBRIQUE : PÉRIODE DE TRANSITION (APÔTRE DAHI ISAAC) --- */}
+          <div className="w-full min-h-[60vh] flex flex-col md:flex-row items-stretch">
+            <div className="w-full md:w-1/2 relative min-h-[40vh] md:min-h-auto">
+              <Image
+                src="/Gemini_Generated_Image_4kbq594kbq594kbq.jpeg"
+                alt="Apôtre Dahi Isaac"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="w-full md:w-1/2 flex flex-col justify-center items-center text-center p-8 md:p-16 bg-slate-900 text-white">
+              <h2 className="text-2xl md:text-4xl font-extrabold mb-6 tracking-wide uppercase">
+                La Période de Transition sous la Conduite de l'Apôtre Dahi Isaac (2016-2022)
+              </h2>
+              <p className="text-white/95 text-base md:text-lg leading-relaxed font-light max-w-xl text-left">
+                Après la mort de notre père fondateur, l'Apôtre Ouli Samuel qui avait posé les fondations de notre église, l'Église de Réveil du Plein Évangile - Vision Apostolique Internationale a traversé une étape charnière de son histoire.
+                <br /><br />
+                Suite au rappel à Dieu du père fondateur en 2015, l'Église a dû faire face à cette épreuve majeure avec foi et résilience. Dans ce contexte de deuil et de transition, la gouvernance de l'institution a été confiée à l'Apôtre Dahi Isaac, qui a assuré la présidence par intérim de 2016 à 2022.
+                <br /><br />
+                Cette période, bien que marquée par la disparition du pionnier, a été cruciale pour maintenir la cohésion de l'œuvre, préserver la stabilité spirituelle des fidèles et assurer la continuité de la vision apostolique. Le leadership de l'Apôtre Dahi Isaac durant ces six années a permis de préparer sereinement le terrain pour les mutations structurelles qui aboutiront, en 2022, à l'adoption de nouveaux textes organiques et à la prise de fonction de la présidence actuelle à Zuénoula.
+              </p>
+            </div>
+          </div>
+
+
+          {/* === RUBRIQUE 6 (LE RENOUVEAU AVEC L'APÔTRE HENRI KOFFI FAYOL) === */}
+          <div className="w-full min-h-[60vh] flex flex-col md:flex-row-reverse items-stretch py-12 bg-white text-slate-800">
+            
+            {/* BLOC VISUEL (À DROITE) */}
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-6">
+              <div className="bg-slate-50 p-3 rounded-2xl shadow-xl w-full max-w-[450px]">
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src="/President.png" 
+                    fill
+                    alt="Apôtre Henri Koffi Fayol"
+                    className="rounded-xl object-cover"
+                  />
+                </div>
+                <p className="text-center text-xs font-semibold text-slate-400 mt-2">
+                  Une nouvelle ère de croissance et de dynamisme spirituel
+                </p>
+              </div>
+            </div>
+
+            {/* BLOC TEXTE (À GAUCHE) */}
+            <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 py-8 space-y-6 text-left">
+              <div className="inline-block bg-sky-100 text-sky-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full w-fit">
+                Nouvelle Ère
+              </div>
+              
+              <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight uppercase tracking-wide">
+                Le Renouveau avec l'Apôtre Henri Koffi Fayol
+              </h2>
+              
+              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+                L'année 2022 a marqué le début d'une nouvelle ère pour l'Église de Réveil du Plein Évangile - Vision Apostolique Internationale. Réunis en pastorale à Zuénoula après la démission de l'Apôtre Dahi Isaac, les délégués ont adopté de nouveaux textes organiques et confié la présidence à l'Apôtre Henri Koffi Fayol.
+                Dès lors, sous l'impulsion de son nouveau président, l'Église est entrée dans une dynamique de transformation majeure. À travers la modernisation des outils de gestion, la formation continue du corps pastoral et une présence communautaire intensifiée, cette vision redynamise profondément l'ensemble de nos communautés à travers le monde.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 pt-2">
+                <div className="border-t-2 border-sky-500 pt-3">
+                  <h5 className="font-bold text-slate-900 text-sm uppercase">Vision Moderne</h5>
+                  <p className="text-xs text-slate-500 mt-1">L'intégration d'outils contemporains pour propager l'Évangile plus loin.</p>
+                </div>
+                <div className="border-t-2 border-sky-500 pt-3">
+                  <h5 className="font-bold text-slate-900 text-sm uppercase">Leadership</h5>
+                  <p className="text-xs text-slate-500 mt-1">Un accent fort sur l'excellence, l'intégrité et la formation continue.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+{/* === RUBRIQUE 5 (VISION APOSTOLIQUE INTERNATIONALE) === */}
           <div className="w-full min-h-[60vh] flex flex-col md:flex-row items-stretch py-12 bg-slate-50 text-slate-800">
             
             {/* BLOC DE DEUX GRANDES PHOTOS EMPILÉES (À GAUCHE) */}
@@ -194,56 +266,6 @@ export default function NotreHistoire() {
             </div>
 
           </div>
-
-          {/* === RUBRIQUE 6 (LE RENOUVEAU AVEC L'APÔTRE HENRI KOFFI FAYOL) === */}
-          <div className="w-full min-h-[60vh] flex flex-col md:flex-row-reverse items-stretch py-12 bg-white text-slate-800">
-            
-            {/* BLOC VISUEL (À DROITE) */}
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-6">
-              <div className="bg-slate-50 p-3 rounded-2xl shadow-xl w-full max-w-[450px]">
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
-                    src="/President.png" 
-                    fill
-                    alt="Apôtre Henri Koffi Fayol"
-                    className="rounded-xl object-cover"
-                  />
-                </div>
-                <p className="text-center text-xs font-semibold text-slate-400 mt-2">
-                  Une nouvelle ère de croissance et de dynamisme spirituel
-                </p>
-              </div>
-            </div>
-
-            {/* BLOC TEXTE (À GAUCHE) */}
-            <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 py-8 space-y-6 text-left">
-              <div className="inline-block bg-sky-100 text-sky-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full w-fit">
-                Nouvelle Ère
-              </div>
-              
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight uppercase tracking-wide">
-                Le Renouveau avec l'Apôtre Henri Koffi Fayol
-              </h2>
-              
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                L'année 2022 a marqué le début d'une nouvelle ère pour l'Église de Réveil du Plein Évangile - Vision Apostolique Internationale. Réunis en pastorale à Zuénoula après la démission de l'Apôtre Dahi Isaac, les délégués ont adopté de nouveaux textes organiques et confié la présidence à l'Apôtre Henri Koffi Fayol.
-                Dès lors, sous l'impulsion de son nouveau président, l'Église est entrée dans une dynamique de transformation majeure. À travers la modernisation des outils de gestion, la formation continue du corps pastoral et une présence communautaire intensifiée, cette vision redynamise profondément l'ensemble de nos communautés à travers le monde.
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="border-t-2 border-sky-500 pt-3">
-                  <h5 className="font-bold text-slate-900 text-sm uppercase">Vision Moderne</h5>
-                  <p className="text-xs text-slate-500 mt-1">L'intégration d'outils contemporains pour propager l'Évangile plus loin.</p>
-                </div>
-                <div className="border-t-2 border-sky-500 pt-3">
-                  <h5 className="font-bold text-slate-900 text-sm uppercase">Leadership</h5>
-                  <p className="text-xs text-slate-500 mt-1">Un accent fort sur l'excellence, l'intégrité et la formation continue.</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
         </div>
       </section>
 
