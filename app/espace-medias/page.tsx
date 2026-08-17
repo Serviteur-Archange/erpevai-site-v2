@@ -5,8 +5,12 @@ import Navbar from "../components/Navbar";
 import DonationModal from "../DonationModal";
 
 export default function EspaceMedias() {
-  const [isLiveOpen, setIsLiveOpen] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  
+  // État pour gérer la photo sélectionnée en grand (Lightbox)
+  const [currentImageIndex, setCurrentImageIndex] = useState<number | null>(null);
+  const totalPhotos = 18;
 
   useEffect(() => {
     const handleOpenDonation = () => setIsDonationOpen(true);
@@ -209,7 +213,7 @@ export default function EspaceMedias() {
         </div>
       </section>
 
-      {/* SECTION PHOTOS */}
+      {/* SECTION PHOTOS - AVEC CARTES CLIQUABLES EN POP-UP */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 border-l-4 border-red-600 pl-4 flex items-center gap-3">
@@ -223,48 +227,193 @@ export default function EspaceMedias() {
           </span>
         </div>
 
+        {/* Grille des albums */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group">
-            <div className="h-48 bg-gray-200 flex items-center justify-center text-gray-500 font-semibold group-hover:scale-105 transition-transform duration-300">
-              Photo Culte Dominical
+          
+          {/* Carte 1 : Conférence des Femmes */}
+          <div 
+            onClick={() => setActiveModal("femmes")}
+            className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group cursor-pointer hover:shadow-xl transition-all"
+          >
+            <div className="h-48 overflow-hidden relative">
+              <img
+                src="/femmes/1.jpg"
+                alt="Conférence Nationale des femmes"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
             </div>
             <div className="p-4">
-              <h4 className="font-bold text-sm text-gray-800">Célébration du Dimanche</h4>
-              <p className="text-gray-400 text-xs mt-1">Il y a 3 jours</p>
+              <h4 className="font-bold text-sm text-gray-800">Conférence Nationale des femmes</h4>
+              <p className="text-gray-400 text-xs mt-1">Bouaké 2026 (Cliquer pour voir)</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group">
+          {/* Carte 2 : Sainte Cène */}
+          <div 
+            onClick={() => setActiveModal("cene")}
+            className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group cursor-pointer hover:shadow-xl transition-all"
+          >
             <div className="h-48 bg-gray-200 flex items-center justify-center text-gray-500 font-semibold group-hover:scale-105 transition-transform duration-300">
-              Photo Sainte Cène
+              Photo de la Conférence Nationale des église ERPE-VAI 2026
             </div>
             <div className="p-4">
-              <h4 className="font-bold text-sm text-gray-800">Partage de la Sainte Cène</h4>
-              <p className="text-gray-400 text-xs mt-1">Semaine dernière</p>
+              <h4 className="font-bold text-sm text-gray-800">Conférence Nationale des église ERPE-VAI</h4>
+              <p className="text-gray-400 text-xs mt-1">Bouaké 2025 (Cliquer pour voir)</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group">
+          {/* Carte 3 : Baptême */}
+          <div 
+            onClick={() => setActiveModal("bapteme")}
+            className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group cursor-pointer hover:shadow-xl transition-all"
+          >
             <div className="h-48 bg-gray-200 flex items-center justify-center text-gray-500 font-semibold group-hover:scale-105 transition-transform duration-300">
               Photo Baptême
             </div>
             <div className="p-4">
               <h4 className="font-bold text-sm text-gray-800">Service de Baptême</h4>
-              <p className="text-gray-400 text-xs mt-1">Ce mois-ci</p>
+              <p className="text-gray-400 text-xs mt-1">Ce mois-ci (Cliquer)</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group">
+          {/* Carte 4 : Jeunesse */}
+          <div 
+            onClick={() => setActiveModal("jeunesse")}
+            className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 group cursor-pointer hover:shadow-xl transition-all"
+          >
             <div className="h-48 bg-gray-200 flex items-center justify-center text-gray-500 font-semibold group-hover:scale-105 transition-transform duration-300">
               Photo Jeunesse
             </div>
             <div className="p-4">
               <h4 className="font-bold text-sm text-gray-800">Rencontre de la Jeunesse</h4>
-              <p className="text-gray-400 text-xs mt-1">Le mois dernier</p>
+              <p className="text-gray-400 text-xs mt-1">Le mois dernier (Cliquer)</p>
             </div>
           </div>
+
         </div>
       </section>
+
+      {/* FENÊTRE MODALE (POP-UP) - GRILLE DES MINIATURES */}
+      {activeModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            
+            {/* En-tête de la modale */}
+            <div className="p-6 border-b flex items-center justify-between bg-blue-950 text-white">
+              <h3 className="text-xl font-bold uppercase tracking-wide">
+                Album : {activeModal === "femmes" && "Conférence Nationale des Femmes"}
+                {activeModal === "cene" && "Partage de la Sainte Cène"}
+                {activeModal === "bapteme" && "Service de Baptême"}
+                {activeModal === "jeunesse" && "Rencontre de la Jeunesse"}
+              </h3>
+              <button 
+                onClick={() => setActiveModal(null)}
+                className="bg-red-600 hover:bg-red-700 text-white w-10 h-10 rounded-full font-bold flex items-center justify-center transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Corps de la modale (Grille des 18 photos cliquables) */}
+            <div className="p-6 overflow-y-auto max-h-[70vh] grid grid-cols-2 md:grid-cols-3 gap-4">
+              
+              {activeModal === "femmes" && (
+                <>
+                  {Array.from({ length: totalPhotos }).map((_, index) => (
+                    <div 
+                      key={index} 
+                      onClick={() => setCurrentImageIndex(index)} // Ouvre la photo en grand format au clic
+                      className="aspect-video bg-gray-100 rounded-lg overflow-hidden shadow hover:scale-[1.02] transition-transform cursor-pointer relative group"
+                    >
+                      <img 
+                        src={`/femmes/${index + 1}.jpg`} 
+                        alt={`Conférence Femmes ${index + 1}`} 
+                        className="w-full h-full object-cover" 
+                      />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold text-sm">
+                        🔍 Agrandir
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {activeModal === "cene" && (
+                <div className="col-span-full py-12 text-center text-gray-500 font-semibold">
+                  Photos de la Sainte Cène à venir...
+                </div>
+              )}
+
+              {activeModal === "bapteme" && (
+                <div className="col-span-full py-12 text-center text-gray-500 font-semibold">
+                  Photos du Baptême à venir...
+                </div>
+              )}
+
+              {activeModal === "jeunesse" && (
+                <div className="col-span-full py-12 text-center text-gray-500 font-semibold">
+                  Photos de la Jeunesse à venir...
+                </div>
+              )}
+
+            </div>
+
+            {/* Pied de la modale */}
+            <div className="p-4 border-t bg-gray-50 text-right">
+              <button 
+                onClick={() => setActiveModal(null)}
+                className="px-6 py-2 bg-gray-800 text-white rounded-lg text-sm font-semibold hover:bg-gray-700"
+              >
+                Fermer
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* LIGHTBOX : VISIONNEUSE PLEIN ÉCRAN AVEC FLÈCHES DE DÉFILEMENT */}
+      {currentImageIndex !== null && (
+        <div className="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-4">
+          
+          {/* Bouton pour fermer le plein écran */}
+          <button 
+            onClick={() => setCurrentImageIndex(null)}
+            className="absolute top-6 right-6 text-white text-4xl hover:text-red-500 font-bold z-50 transition-colors"
+          >
+            ✕
+          </button>
+
+          {/* Bouton Précédent (Flèche gauche) */}
+          <button 
+            onClick={() => setCurrentImageIndex((prev) => (prev! > 0 ? prev! - 1 : totalPhotos - 1))}
+            className="absolute left-4 md:left-10 text-white bg-black/50 hover:bg-red-600 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold transition-colors z-50"
+          >
+            ❮
+          </button>
+
+          {/* Image active en grand format */}
+          <div className="relative max-w-5xl max-h-[85vh] w-full h-full flex items-center justify-center">
+            <img 
+              src={`/femmes/${currentImageIndex + 1}.jpg`} 
+              alt="Photo en grand" 
+              className="max-h-[85vh] max-w-full object-contain rounded-lg shadow-2xl"
+            />
+            <div className="absolute bottom-2 text-white/80 bg-black/60 px-4 py-1 rounded-full text-sm">
+              {currentImageIndex + 1} / {totalPhotos}
+            </div>
+          </div>
+
+          {/* Bouton Suivant (Flèche droite) */}
+          <button 
+            onClick={() => setCurrentImageIndex((prev) => (prev! < totalPhotos - 1 ? prev! + 1 : 0))}
+            className="absolute right-4 md:right-10 text-white bg-black/50 hover:bg-red-600 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold transition-colors z-50"
+          >
+            ❯
+          </button>
+
+        </div>
+      )}
 
       {/* SECTION CONTACT / FOOTER */}
       <section
@@ -321,7 +470,7 @@ export default function EspaceMedias() {
               WhatsApp : 0709172800
             </p>
             <p className="text-gray-400 mt-3">
-              Service Communication : XXXXXXXXXX
+              Service Communication : +2250545946345
             </p>
           </div>
         </div>
