@@ -1,65 +1,54 @@
 "use client";
 import { useState } from 'react';
-import Image from 'next/image';
 
-// 1. Importe les composants de la librairie et son style CSS
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
+const MEDIA_VIDEOS = [
+  { type: 'video', src: 'https://www.facebook.com/share/r/1BXYWVzJ2w/' },
+  { type: 'video', src: 'https://www.facebook.com/share/r/1BT1oM3Hzu/' },
+  { type: 'video', src: 'https://www.facebook.com/share/r/193EYDAXRc/' },
+  { type: 'video', src: 'https://www.facebook.com/share/v/1B1mmdLFpM/' },
+  { type: 'video', src: 'https://www.facebook.com/share/v/1D899XKRdA/' },
+];
 
 export default function Gallery() {
-  // Tes images (je reprends ta liste de 8 photos pour l'exemple)
-  const images = [
-    "IMG_2496.jpg", "IMG_2503.jpg", "IMG_2507.jpg", "IMG_2509.jpg",
-    "IMG_2513.jpg", "IMG_2515.jpg", "IMG_2516.jpg", "IMG_2518.jpg"
-  ];
-
-  // 2. État pour savoir quelle image est ouverte (-1 = aucune)
-  const [index, setIndex] = useState(-1);
-
-  // 3. Transforme tes noms de fichiers en un tableau d'objets requis par la Lightbox
-  const slides = images.map((imageName) => ({
-    src: `/${imageName}`,
-    alt: imageName
-  }));
+ const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-full">
-      {/* Grille des miniatures */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {images.map((imageName, slideIndex) => (
-          <div
-            key={slideIndex}
-            // 4. Au clic, on ouvre la lightbox à l'index correspondant
-            onClick={() => setIndex(slideIndex)}
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg bg-gray-200 group cursor-pointer transition-transform duration-300 hover:scale-105"
-          >
-            <Image
-              src={`/${imageName}`}
-              alt={imageName}
-              fill
-              priority={slideIndex < 4}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
+    <div>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl text-left">
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-600 font-bold p-2 px-4 rounded-full transition-colors text-sm cursor-pointer"
+            >
+              ✕ Fermer
+            </button>
+            
+            <h3 className="text-2xl font-black text-slate-900 mb-6 uppercase border-b pb-3">
+              Nos Vidéos & Reels Facebook
+            </h3>
 
-      {/* 5. Intégration de la Lightbox */}
-      <Lightbox
-        // La lightbox s'ouvre si 'index' n'est pas -1
-        open={index >= 0}
-        // Affiche l'image correspondant à l'index cliqué
-        index={index}
-        // Ferme la lightbox en remettant l'index à -1
-        close={() => setIndex(-1)}
-        // Les sources des images
-        slides={slides}
-        // --- OPTIONS SUPPLÉMENTAIRES ---
-        // Ajoute les plugins de Zoom et de plein écran si tu le souhaites
-        // (Tu devras installer ces plugins séparément si tu veux les options avancées)
-        // plugins={[Zoom, Fullscreen]}
-      />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {MEDIA_VIDEOS.map((item, index) => (
+                <div key={index} className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9] flex items-center justify-center">
+                  <a 
+                    href={item.src} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full h-full relative group flex flex-col items-center justify-center bg-blue-950 text-white p-4 text-center hover:bg-blue-900 transition-colors"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl font-bold shadow-lg mb-2 group-hover:scale-110 transition-transform">
+                      ▶
+                    </div>
+                    <span className="font-semibold text-sm text-blue-100">Voir sur Facebook</span>
+                    <span className="text-xs text-gray-400 mt-1 truncate max-w-[250px]">{item.src}</span>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

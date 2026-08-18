@@ -1,50 +1,28 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   try {
+    // Essayez de récupérer les données avec un tri par created_at décroissant
     const { data, error } = await supabase
-      .from('communiques')
+      .from('communiques') // Vérifiez bien si c'est 'communiques' ou 'communique'
       .select('*')
-      .order('created_at', { ascending: false })
-      .limit(6);
+      .order('created_at', { ascending: false });
 
     if (error) {
+      console.error("Erreur Supabase détaillée :", error.message);
       throw new Error(error.message);
     }
 
-    return NextResponse.json({ data });
-  } catch (err: any) {
-    console.warn("Mode hors-ligne actif (réseau bloqué)");
+    // Si data est vide, on renvoie un tableau vide au lieu de passer au catch
+    return NextResponse.json({ data: data || [] });
     
-    // Les 4 informations pour alimenter le slider
-    const mockData = [
-      {
-        id: 1,
-        title: "Titre de ton communiqué 1",
-        content: "Le contenu exact que tu veux afficher sur ton site pour le premier communiqué...",
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        title: "Titre de ton communiqué 2",
-        content: "Un autre message important du Conseil National pour le deuxième communiqué...",
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 3,
-        title: "Titre de ton communiqué 3",
-        content: "Les détails concernant le troisième communiqué officiel...",
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 4,
-        title: "Titre de ton communiqué 4",
-        content: "Les informations relatives au quatrième communiqué...",
-        created_at: new Date().toISOString(),
-      }
-    ];
-
-    return NextResponse.json({ data: mockData });
+  } catch (err: any) {
+    console.error("Erreur critique dans l'API :", err.message);
+    
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
