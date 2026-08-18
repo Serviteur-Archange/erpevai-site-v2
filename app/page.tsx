@@ -67,7 +67,9 @@ export default function NotreHistoire() {
 
     const fetchPublicCommuniques = async () => {
       try {
-        const response = await fetch('/api/communiques');
+        // On utilise l'URL absolue basée sur l'hôte actuel pour éviter les échecs de fetch en production
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const response = await fetch(`${baseUrl}/api/communiques`);
         const result = await response.json();
 
         if (result.error) {
