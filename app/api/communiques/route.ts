@@ -6,9 +6,8 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    // Essayez de récupérer les données avec un tri par created_at décroissant
     const { data, error } = await supabase
-      .from('communiques') // Vérifiez bien si c'est 'communiques' ou 'communique'
+      .from('communiques')
       .select('*')
       .order('created_at', { ascending: false });
 
@@ -17,12 +16,10 @@ export async function GET() {
       throw new Error(error.message);
     }
 
-    // Si data est vide, on renvoie un tableau vide au lieu de passer au catch
     return NextResponse.json({ data: data || [] });
     
   } catch (err: any) {
     console.error("Erreur critique dans l'API :", err.message);
-    
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
