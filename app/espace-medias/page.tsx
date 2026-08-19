@@ -11,7 +11,7 @@ export default function EspaceMedias() {
   
   const totalPhotosFemmes = 18;
   const totalPhotosConference = 16;
-  const totalPhotosArchives = 17;
+  const totalPhotosArchives = 16;
 
   useEffect(() => {
     const handleOpenDonation = () => setIsDonationOpen(true);
@@ -257,14 +257,14 @@ export default function EspaceMedias() {
           >
             <div className="h-48 overflow-hidden relative bg-gray-100">
               <img
-                src="/archives/01.jpg"
+                src="/Archives/01.jpg"
                 alt="Album Archives"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="p-4">
               <h4 className="font-bold text-sm text-gray-800">Album Archives</h4>
-              <p className="text-gray-400 text-xs mt-1">Souvenirs (17 photos)</p>
+              <p className="text-gray-400 text-xs mt-1">Souvenirs (16 photos)</p>
             </div>
           </div>
 
@@ -348,22 +348,25 @@ export default function EspaceMedias() {
 
               {activeModal === "archives" && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                  {Array.from({ length: totalPhotosArchives }).map((_, index) => (
-                    <div 
-                      key={index} 
-                      onClick={() => setCurrentImageIndex(index)}
-                      className="aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-md hover:scale-[1.02] transition-transform cursor-pointer relative group"
-                    >
-                      <img 
-                        src={`/archives/${index + 1}.jpg`} 
-                        alt={`Archives ${index + 1}`} 
-                        className="w-full h-full object-cover" 
-                      />
-                      <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold text-sm">
-                        🔍 Agrandir
+                  {Array.from({ length: totalPhotosArchives }).map((_, index) => {
+                    const fileName = (index + 1).toString().padStart(2, '0');
+                    return (
+                      <div 
+                        key={index} 
+                        onClick={() => setCurrentImageIndex(index)}
+                        className="aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-md hover:scale-[1.02] transition-transform cursor-pointer relative group"
+                      >
+                        <img 
+                          src={`/Archives/${fileName}.jpg`} 
+                          alt={`Archives ${fileName}`} 
+                          className="w-full h-full object-cover" 
+                        />
+                        <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold text-sm">
+                          🔍 Agrandir
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
 
@@ -413,7 +416,7 @@ export default function EspaceMedias() {
                   ? `/femmes/${currentImageIndex + 1}.jpg` 
                   : activeModal === "conference-2025"
                   ? `/Conference 2025/${currentImageIndex + 1}.jpg`
-                  : `/archives/${currentImageIndex + 1}.jpg`
+                  : `/Archives/${(currentImageIndex + 1).toString().padStart(2, '0')}.jpg`
               } 
               alt="Photo en grand" 
               className="max-h-[85vh] max-w-full object-contain rounded-lg shadow-2xl"
