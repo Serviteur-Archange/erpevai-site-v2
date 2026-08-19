@@ -257,7 +257,7 @@ export default function EspaceMedias() {
           >
             <div className="h-48 overflow-hidden relative bg-gray-100">
               <img
-                src="/archives/1.jpg"
+                src="/archives/01.jpg"
                 alt="Album Archives"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
