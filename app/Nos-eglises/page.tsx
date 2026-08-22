@@ -200,6 +200,51 @@ export default function NosEglisesPage() {
           </td>
         </tr>
 
+        {/* RÉGION BAS-SASSANDRA (5 lignes) */}
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td rowSpan={5} className="py-4 px-6 font-bold text-gray-900 bg-gray-50 border border-gray-300 align-middle">
+            Région Bas-Sassandra
+          </td>
+          <td className="py-4 px-6 font-medium border border-gray-300">San-Pédro</td>
+          <td className="py-4 px-6 border border-gray-300">Quartier Zimbabwe</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Zakehi Modeste</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250545418801" className="text-red-600 font-bold hover:underline">+225 05 45 41 88 01</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">San-Pédro</td>
+          <td className="py-4 px-6 border border-gray-300">Cathédrale 1</td>
+          <td className="py-4 px-6 border border-gray-300">Rodrigue</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250103591069" className="text-red-600 font-bold hover:underline">+225 01 03 59 10 69</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Sassandra</td>
+          <td className="py-4 px-6 border border-gray-300">Quartier Bette</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Seri Simplice</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250585400718" className="text-red-600 font-bold hover:underline">+225 05 85 40 07 18</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Soubré</td>
+          <td className="py-4 px-6 border border-gray-300">Quartier Gabon</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Ibo Isaac</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250708128863" className="text-red-600 font-bold hover:underline">+225 07 08 12 88 63</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Yabayo</td>
+          <td className="py-4 px-6 border border-gray-300">Quartier Fairtaikro</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Blé Justin</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250172121327" className="text-red-600 font-bold hover:underline">+225 01 72 12 13 27</a>
+          </td>
+        </tr>
+
       </tbody>
     </table>
   </div>
