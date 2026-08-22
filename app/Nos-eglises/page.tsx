@@ -61,23 +61,147 @@ export default function NosEglisesPage() {
         </p>
       </section>
 
-      {/* SECTION TABLEAU DES ÉGLISES PAR VILLE */}
+{/* SECTION TABLEAU DES ÉGLISES PAR VILLE */}
 <section className="max-w-6xl mx-auto px-4 py-16">
   <div className="text-center mb-10">
     <h2 className="text-3xl font-bold text-gray-900 mb-2">Répertoire de nos Églises</h2>
-    <p className="text-gray-600">Retrouvez chaque ville, son pasteur responsable et leurs contacts.</p>
+    <p className="text-gray-600">Retrouvez chaque église, sa localisation et son pasteur responsable.</p>
   </div>
 
-  <div className="bg-white shadow-lg rounded-2xl border border-gray-200 p-10 text-center">
-    <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 text-red-600 rounded-full mb-4">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H7" />
-      </svg>
-    </div>
-    <h3 className="text-xl font-semibold text-gray-800 mb-2">Répertoire en cours de mise à jour</h3>
-    <p className="text-gray-500 max-w-md mx-auto">
-      La liste officielle des églises et des pasteurs responsables est en cours de validation par le secrétariat. Elle sera disponible très prochainement.
-    </p>
+  <div className="overflow-x-auto shadow-lg rounded-2xl border border-gray-300 bg-white">
+    <table className="w-full text-left border-collapse border border-gray-300">
+      <thead>
+        <tr className="bg-red-600 text-white uppercase text-xs sm:text-sm tracking-wider">
+          <th className="py-4 px-6 border border-gray-300 border-b-2">Région</th>
+          <th className="py-4 px-6 border border-gray-300 border-b-2">Ville</th>
+          <th className="py-4 px-6 border border-gray-300 border-b-2">Localisation / Quartier</th>
+          <th className="py-4 px-6 border border-gray-300 border-b-2">Pasteur Responsable</th>
+          <th className="py-4 px-6 border border-gray-300 border-b-2">Contact / Téléphone</th>
+        </tr>
+      </thead>
+      <tbody className="text-gray-700 text-sm">
+        
+        {/* RÉGION D'ABIDJAN (4 lignes) */}
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td rowSpan={4} className="py-4 px-6 font-bold text-gray-900 bg-gray-50 border border-gray-300 align-middle">
+            Région d’Abidjan
+          </td>
+          <td className="py-4 px-6 font-medium border border-gray-300">Abidjan (Angré)</td>
+          <td className="py-4 px-6 border border-gray-300">Carrefour Angré derrière la Boulangerie Roi (zone Collège Victor Loba)</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Basile Mamert Acakpovi</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250170929295" className="text-red-600 font-bold hover:underline">+225 01 70 92 92 95</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Abidjan (Abobo)</td>
+          <td className="py-4 px-6 border border-gray-300">Hôpital Houphouët Boigny (ancien fin goudron)</td>
+          <td className="py-4 px-6 border border-gray-300">Prophète Samuel Andoh</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250710101036" className="text-red-600 font-bold hover:underline">+225 07 10 10 10 36</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Rubino</td>
+          <td className="py-4 px-6 border border-gray-300">Rubino 50 hectares (Campement 50 hectares)</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Niamien Edouard</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250708929470" className="text-red-600 font-bold hover:underline">+225 07 08 92 94 70</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Abidjan (Yopougon)</td>
+          <td className="py-4 px-6 border border-gray-300">Kouté (zone du Palais de Justice)</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Jérôme Dakoury</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250709582371" className="text-red-600 font-bold hover:underline">+225 07 09 58 23 71</a>
+          </td>
+        </tr>
+
+        {/* RÉGION DU HAMBOL (5 lignes) */}
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td rowSpan={5} className="py-4 px-6 font-bold text-gray-900 bg-gray-50 border border-gray-300 align-middle">
+            Région du Hambol
+          </td>
+          <td className="py-4 px-6 font-medium border border-gray-300">Katiola</td>
+          <td className="py-4 px-6 border border-gray-300">Lafonkaha</td>
+          <td className="py-4 px-6 border border-gray-300">Ouffoué BROU</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250707584974" className="text-red-600 font-bold hover:underline">+225 07 07 58 49 74</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Fronan</td>
+          <td className="py-4 px-6 border border-gray-300">Souroukaha</td>
+          <td className="py-4 px-6 border border-gray-300">Koffi Norbert</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250787676728" className="text-red-600 font-bold hover:underline">+225 07 87 67 67 28</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Dabakala</td>
+          <td className="py-4 px-6 border border-gray-300">Sambaguien</td>
+          <td className="py-4 px-6 border border-gray-300">Evariste KONÉ</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250709739921" className="text-red-600 font-bold hover:underline">+225 07 09 73 99 21</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Ouréguékaha</td>
+          <td className="py-4 px-6 border border-gray-300">Sous-préfecture</td>
+          <td className="py-4 px-6 border border-gray-300">CAMARA Pierre</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250708203951" className="text-red-600 font-bold hover:underline">+225 07 08 20 39 51</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Attienkaha</td>
+          <td className="py-4 px-6 border border-gray-300">Village</td>
+          <td className="py-4 px-6 border border-gray-300">Mme DIBONAN</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250102221436" className="text-red-600 font-bold hover:underline">+225 01 02 22 14 36</a>
+          </td>
+        </tr>
+
+        {/* RÉGION DU GRAND NORD (4 lignes) */}
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td rowSpan={4} className="py-4 px-6 font-bold text-gray-900 bg-gray-50 border border-gray-300 align-middle">
+            Région du Grand Nord
+          </td>
+          <td className="py-4 px-6 font-medium border border-gray-300">Ferké 2</td>
+          <td className="py-4 px-6 border border-gray-300">SUCAF extension</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Dali Guy</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250747319429" className="text-red-600 font-bold hover:underline">+225 07 47 31 94 29</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Badikaha</td>
+          <td className="py-4 px-6 border border-gray-300">Badikaha ville</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Lazeme Esaie</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250748693244" className="text-red-600 font-bold hover:underline">+225 07 48 69 32 44</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Ferké ville</td>
+          <td className="py-4 px-6 border border-gray-300">Dioulabougou</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Kouakou Kouadio</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250709411365" className="text-red-600 font-bold hover:underline">+225 07 09 41 13 65</a>
+          </td>
+        </tr>
+        <tr className="hover:bg-gray-50 transition-colors">
+          <td className="py-4 px-6 font-medium border border-gray-300">Korhogo</td>
+          <td className="py-4 px-6 border border-gray-300">Kacirime</td>
+          <td className="py-4 px-6 border border-gray-300">Pasteur Ouattara Marcel</td>
+          <td className="py-4 px-6 border border-gray-300">
+            <a href="tel:+2250506029424" className="text-red-600 font-bold hover:underline">+225 05 06 02 94 24</a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
   </div>
 </section>
 {/* CONTACT */}
