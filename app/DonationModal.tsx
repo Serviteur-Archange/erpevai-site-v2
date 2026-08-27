@@ -127,25 +127,14 @@ export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
       <div className="flex flex-col items-center py-2">
         <p className="text-sm text-cyan-400 font-bold mb-3">Scannez ce QR Code Wave ou ouvrez l'application :</p>
         
-        <button 
-          type="button"
-          onClick={() => {
-            // 1. Copie du numéro
-            navigator.clipboard.writeText('0748751083');
-            alert('Numéro Wave (07 48 75 10 83) copié dans le presse-papier !');
-
-            // 2. Tente d'ouvrir directement l'application Wave installée
-            window.location.href = 'wave://';
-
-            // 3. Secours : si l'app ne s'ouvre pas au bout d'une seconde, redirige vers le store/site
-            setTimeout(() => {
-              window.open('https://wave.com', '_blank');
-            }, 1000);
-          }}
+        <a 
+          href="https://pay.wave.com/m/M_ci_qAiPyK_VvoT8/c/ci/?src=p"
+          target="_blank"
+          rel="noopener noreferrer"
           className="w-full bg-[#11b3e5] hover:bg-[#0ea5d4] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 mb-4 text-sm cursor-pointer"
         >
           <span>📱 Ouvrir l'application Wave</span>
-        </button>
+        </a>
 
         <div className="w-44 h-44 bg-white p-3 rounded-xl relative shadow-lg mb-3">
           <Image src="/Cadre Culte Wave.png" alt="QR Code Wave" fill className="object-contain p-1" />
