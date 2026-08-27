@@ -130,9 +130,17 @@ export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
         <button 
           type="button"
           onClick={() => {
-            navigator.clipboard.writeText('+2250748751083');
-            alert('Numéro Wave (+225 07 48 75 10 83) copié ! Collez-le dans l\'application Wave pour valider le don.');
-            window.open('https://pay.wave.com', '_blank');
+            // 1. Copie du numéro
+            navigator.clipboard.writeText('0748751083');
+            alert('Numéro Wave (07 48 75 10 83) copié dans le presse-papier !');
+
+            // 2. Tente d'ouvrir directement l'application Wave installée
+            window.location.href = 'wave://';
+
+            // 3. Secours : si l'app ne s'ouvre pas au bout d'une seconde, redirige vers le store/site
+            setTimeout(() => {
+              window.open('https://wave.com', '_blank');
+            }, 1000);
           }}
           className="w-full bg-[#11b3e5] hover:bg-[#0ea5d4] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 mb-4 text-sm cursor-pointer"
         >
