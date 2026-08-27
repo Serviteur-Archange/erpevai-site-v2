@@ -121,50 +121,53 @@ export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
               </div>
 
               {/* CONTENU MOBILE MONEY */}
-              {showMobileMoney && selectedOperator && (
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl text-center" onClick={(e) => e.stopPropagation()}>
-                  {selectedOperator === 'wave' && (
-                    <div className="flex flex-col items-center py-2">
-                      <p className="text-sm text-cyan-400 font-bold mb-3">Scannez ce QR Code Wave ou ouvrez l'application :</p>
-                      
-                      <a 
-                        href="https://pay.wave.com/m/M_ci_fT716aP02z1a/c/?amount=&currency=XOF"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full bg-[#11b3e5] hover:bg-[#0ea5d4] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 mb-4 text-sm"
-                      >
-                        <span>📱 Ouvrir l'application Wave</span>
-                      </a>
+{showMobileMoney && selectedOperator && (
+  <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl text-center" onClick={(e) => e.stopPropagation()}>
+    {selectedOperator === 'wave' && (
+      <div className="flex flex-col items-center py-2">
+        <p className="text-sm text-cyan-400 font-bold mb-3">Scannez ce QR Code Wave ou ouvrez l'application :</p>
+        
+        <button 
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText('+2250748751083');
+            alert('Numéro Wave (+225 07 48 75 10 83) copié ! Collez-le dans l\'application Wave pour valider le don.');
+            window.open('https://pay.wave.com', '_blank');
+          }}
+          className="w-full bg-[#11b3e5] hover:bg-[#0ea5d4] text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2 mb-4 text-sm cursor-pointer"
+        >
+          <span>📱 Ouvrir l'application Wave</span>
+        </button>
 
-                      <div className="w-44 h-44 bg-white p-3 rounded-xl relative shadow-lg mb-3">
-                        <Image src="/Cadre Culte Wave.png" alt="QR Code Wave" fill className="object-contain p-1" />
-                      </div>
-                      <p className="text-xs text-slate-400">Ou numéro : <span className="text-white font-bold">+225 07 48 75 10 83</span></p>
-                    </div>
-                  )}
-                  {selectedOperator === 'orange' && (
-                    <div className="py-2">
-                      <p className="text-sm text-orange-400 font-bold mb-1">Numéro Orange Money :</p>
-                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">07 48 75 10 83</p>
-                      <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
-                    </div>
-                  )}
-                  {selectedOperator === 'moov' && (
-                    <div className="py-2">
-                      <p className="text-sm text-emerald-400 font-bold mb-1">Numéro Moov Money :</p>
-                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">01 XX XX XX XX</p>
-                      <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
-                    </div>
-                  )}
-                  {selectedOperator === 'mtn' && (
-                    <div className="py-2">
-                      <p className="text-sm text-yellow-400 font-bold mb-1">Numéro MTN Money :</p>
-                      <p className="text-2xl font-mono font-black text-white tracking-wider my-2">05 XX XX XX XX</p>
-                      <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
-                    </div>
-                  )}
-                </div>
-              )}
+        <div className="w-44 h-44 bg-white p-3 rounded-xl relative shadow-lg mb-3">
+          <Image src="/Cadre Culte Wave.png" alt="QR Code Wave" fill className="object-contain p-1" />
+        </div>
+        <p className="text-xs text-slate-400">Ou numéro : <span className="text-white font-bold">+225 07 48 75 10 83</span></p>
+      </div>
+    )}
+    {selectedOperator === 'orange' && (
+      <div className="py-2">
+        <p className="text-sm text-orange-400 font-bold mb-1">Numéro Orange Money :</p>
+        <p className="text-2xl font-mono font-black text-white tracking-wider my-2">07 48 75 10 83</p>
+        <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
+      </div>
+    )}
+    {selectedOperator === 'moov' && (
+      <div className="py-2">
+        <p className="text-sm text-emerald-400 font-bold mb-1">Numéro Moov Money :</p>
+        <p className="text-2xl font-mono font-black text-white tracking-wider my-2">01 XX XX XX XX</p>
+        <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
+      </div>
+    )}
+    {selectedOperator === 'mtn' && (
+      <div className="py-2">
+        <p className="text-sm text-yellow-400 font-bold mb-1">Numéro MTN Money :</p>
+        <p className="text-2xl font-mono font-black text-white tracking-wider my-2">05 XX XX XX XX</p>
+        <p className="text-xs text-slate-400">Nom : <span className="text-slate-200">ÉGLISE ERPEVAI</span></p>
+      </div>
+    )}
+  </div>
+)}
 
               {/* --- BLOC 2 : OPÉRATIONS BANCAIRES & MICROFINANCE --- */}
               <div 
