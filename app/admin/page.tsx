@@ -257,7 +257,7 @@ export default function AdminPage() {
     setEnsCategory(item.category);
     setEnsImageUrl(item.image_url || '');
     setEnsExcerpt(item.excerpt);
-    setEnsContent(item.description || '');
+    setEnsContent(item.content || ''); // Ou item.contenu
   };
 
   const handleDeleteEnseignement = async (id?: string) => {
