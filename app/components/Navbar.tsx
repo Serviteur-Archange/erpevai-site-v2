@@ -36,8 +36,11 @@ export default function Navbar() {
     }`}>
       <div className="max-w-7xl mx-auto h-20 flex items-center justify-between px-3 sm:px-6">
         
-        {/* Logo et Titre */}
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+        {/* Logo et Titre (Cliquable pour retourner à l'accueil) */}
+        <Link 
+          href="/" 
+          className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 hover:opacity-90 transition-opacity"
+        >
           <div className="relative w-10 h-10 sm:w-16 sm:h-16 flex-shrink-0">
             <Image
               src="/logo.png"
@@ -55,7 +58,7 @@ export default function Navbar() {
               Vision Apostolique Internationale
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* MENU DESKTOP */}
         <nav className="hidden md:flex gap-8 text-lg text-white font-medium items-center flex-shrink-0">
