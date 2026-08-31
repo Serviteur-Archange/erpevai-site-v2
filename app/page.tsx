@@ -1,60 +1,31 @@
 "use client";
+
 import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import DonationModal from './DonationModal';
 import MarqueeCommuniques from './components/MarqueeCommuniques';
-import Gallery from './components/Gallery';
 import Footer from './components/Footer';
 
-const GALERIES_DATA: {
-  [key: string]: {
-    title: string;
-    media: Array<{
-      type: string;
-      src: string;
-      thumbnail?: string;
-    }>;
-  };
-} = {
-  messages: {
-    title: "Messages Inspirants",
-    media: [
-      { 
-        type: 'video', 
-        src: 'https://www.facebook.com/61573283174395/videos/4673697372866751', 
-        thumbnail: '/Miniatuer Facebook et Youtube.jpg' 
-      },
-      { 
-        type: 'video', 
-        src: 'https://www.facebook.com/share/v/1Cv25GTBm6/', 
-        thumbnail: '/Miniatuer Facebook et Youtube2.jpg' 
-      },
-    ]
-  },
-  programmes: {
-    title: "Nos Vidéos",
-    media: [
-      { type: 'video', src: 'https://www.facebook.com/share/r/1BXYWVzJ2w/' },
-      { type: 'video', src: 'https://www.facebook.com/share/r/1BT1oM3Hzu/' },
-      { type: 'video', src: 'https://www.facebook.com/share/r/193EYDAXRc/' },
-      { type: 'video', src: 'https://www.facebook.com/share/v/1B1mmdLFpM/' },
-      { type: 'video', src: 'https://www.facebook.com/share/v/1D899XKRdA/' },
-    ]
-  }
-};
+interface Enseignement {
+  id?: string;
+  title: string;
+  category: string;
+  image_url?: string;
+  excerpt: string;
+  content: string;
+  slug?: string;
+  created_at?: string;
+}
 
-type GalerieKey = keyof typeof GALERIES_DATA;
-
-export default function NotreHistoire() {
-  const [activeGalerie, setActiveGalerie] = useState<GalerieKey | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+export default function Home() {
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const [selectedCommunique, setSelectedCommunique] = useState<{ title: string; date: string; content: string } | null>(null);
   
   const [communiques, setCommuniques] = useState<Array<{ title: string; content: string; created_at?: string; category?: string }>>([]);
-  
+  const [enseignements, setEnseignements] = useState<Enseignement[]>([]);
+
   const heroImages = [
     "/church.jpg",
     "/Photo2.jpg",
@@ -66,26 +37,48 @@ export default function NotreHistoire() {
     const handleOpen = () => setIsDonationOpen(true);
     window.addEventListener('open-donation', handleOpen);
 
+    // 1. Charger STRICTEMENT la table "communiques"
     const fetchPublicCommuniques = async () => {
       try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        const response = await fetch(`${baseUrl}/api/communiques`);
-        const result = await response.json();
+        const { data, error } = await supabase
+          .from('communiques')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-        if (result.error) {
-          console.error("Erreur API interne :", result.error);
+        if (!error && data) {
+          setCommuniques(data);
         } else {
-          console.log("Données reçues de l'API :", result.data);
-          if (result.data && result.data.length > 0) {
+          // Fallback sur l'API interne au besoin
+          const response = await fetch('/api/communiques');
+          const result = await response.json();
+          if (result.data && Array.isArray(result.data)) {
             setCommuniques(result.data);
           }
         }
       } catch (err) {
-        console.error("Erreur critique fetch :", err);
+        console.error("Erreur lors de la récupération des communiqués :", err);
+      }
+    };
+
+    // 2. Charger STRICTEMENT la table "enseignements"
+    const fetchPublicEnseignements = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('enseignements')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (!error && data) {
+          setEnseignements(data);
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération des enseignements :", err);
       }
     };
 
     fetchPublicCommuniques();
+    fetchPublicEnseignements();
 
     const slideInterval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
@@ -100,7 +93,7 @@ export default function NotreHistoire() {
   return (
     <main className="min-h-screen bg-gray-100 text-gray-900">
 
-      {/* HERO + NAVBAR AVEC DIAPORAMA EN ARRIÈRE-PLAN */}
+      {/* HERO SECTION AVEC DIAPORAMA */}
       <section className="relative bg-slate-950 overflow-hidden">
         {heroImages.map((src, index) => (
           <div
@@ -132,7 +125,7 @@ export default function NotreHistoire() {
         </div>
       </section>
 
-      {/* INTÉGRATION DU BANDEAU DÉFILANT DYNAMIQUE */}
+      {/* BANDEAU DÉFILANT DYNAMIQUE */}
       {/* @ts-ignore */}
       <MarqueeCommuniques 
         communiques={communiques as any}
@@ -226,7 +219,7 @@ export default function NotreHistoire() {
         </div>
       </section>
 
-      {/* SECTION VOLET INFORMATIONS / CONSEIL NATIONAL */}
+      {/* INFORMATIONS NATIONALES / CONSEIL NATIONAL */}
       <div style={{ backgroundColor: '#111827', padding: '80px 16px', color: '#ffffff', width: '100%' }}>
         <div style={{ maxWidth: '1152px', margin: '0 auto' }}>
           
@@ -249,7 +242,6 @@ export default function NotreHistoire() {
           ) : (
             <div style={{ position: 'relative' }}>
               
-              {/* Bouton Précédent */}
               <button 
                 onClick={() => {
                   const container = document.getElementById('slider-communiques');
@@ -266,7 +258,6 @@ export default function NotreHistoire() {
                 &#10094;
               </button>
 
-              {/* Conteneur du Slider Horizontal */}
               <div 
                 id="slider-communiques"
                 style={{ 
@@ -326,14 +317,13 @@ export default function NotreHistoire() {
                 ))}
               </div>
 
-              {/* Bouton Suivant */}
               <button 
                 onClick={() => {
                   const container = document.getElementById('slider-communiques');
                   if (container) container.scrollBy({ left: 350, behavior: 'smooth' });
                 }}
                 style={{
-                  position: 'absolute', right: '-25px', top: '50%', transform: 'translateY(-50%)', zIndex: '10',
+                  position: 'absolute', right: '-25px', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
                   backgroundColor: '#1f2937', color: '#ffffff', border: '1px solid #374151',
                   width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
@@ -349,131 +339,89 @@ export default function NotreHistoire() {
         </div>
       </div>
 
-      {/* MÉDIAS & GALERIE SUPABASE */}
-      <section id="medias" className="py-24 px-6 md:px-20 bg-gray-100">
-        <div className="max-w-6xl mx-auto text-center">
+      {/* SECTION ENSEIGNEMENTS (DYNAMIQUE) */}
+      <section id="enseignements" className="py-24 px-6 md:px-20 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-6xl mx-auto space-y-12">
           
-          <h2 className="text-5xl font-black text-blue-900 mb-12">
-            MÉDIAS & ÉVÉNEMENTS
-          </h2>
-
-          <Gallery />
-
-          <div className="grid md:grid-cols-2 gap-8 mt-16">
-            <div 
-              onClick={() => setActiveGalerie('messages')}
-              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 text-left"
-            >
-              <div className="relative aspect-[16/9] w-full">
-                <Image src="/Visuel Video Programme.jpg" alt="Messages" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                  MESSAGES INSPIRANTS
-                </h3>
-                <p className="mt-4 text-gray-600">
-                 Nourrissez votre foi et fortifiez votre leadership grâce à notre bibliothèque de messages inspirants. Des ressources spirituelles conçues pour éclairer les nations et restaurer les vies.
-                </p>
-              </div>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <span className="text-red-600 font-bold text-xs uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full border border-red-100">
+                Méditations & Éditoriaux
+              </span>
+              <h2 className="text-4xl md:text-5xl font-black text-blue-950 mt-3 tracking-tight">
+                ENSEIGNEMENTS
+              </h2>
+              <p className="text-gray-600 text-base md:text-lg mt-2 max-w-2xl">
+                Découvrez les derniers messages et études bibliques conçus pour nourrir votre foi et fortifier votre marche spirituelle au quotidien.
+              </p>
             </div>
 
-            <div 
-              onClick={() => setActiveGalerie('programmes')}
-              className="group cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 text-left"
-            >
-              <div className="relative aspect-[16/9] w-full">
-                <Image src="/516388134_718770764228625_8196039677422972509_n.jpg" alt="Programmes" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                  NOS VIDEOS
-                </h3>
-                <p className="mt-4 text-gray-600">
-                  Retrouvez l'intégralité de nos conférences, croisades et directs pour vivre la puissance et la direction du Seigneur Jésus où que vous soyez.
-                </p>
-              </div>
-            </div>
+            {enseignements.length > 0 && (
+              <Link 
+                href="/enseignements"
+                className="inline-flex items-center gap-2 bg-blue-950 hover:bg-blue-900 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition-colors shadow-md w-fit"
+              >
+                Voir tous les enseignements →
+              </Link>
+            )}
           </div>
 
-        </div>
-
-        {/* POPUP LIGHTBOX POUR LES MESSAGES / VIDÉOS */}
-        {activeGalerie && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative shadow-2xl text-left">
-              <button 
-                onClick={() => {
-                  setActiveGalerie(null);
-                  setSelectedVideo(null);
-                }}
-                className="absolute top-4 right-4 bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-600 font-bold p-2 px-4 rounded-full transition-colors text-sm cursor-pointer z-20"
-              >
-                ✕ Fermer
-              </button>
-              
-              <h3 className="text-2xl font-black text-slate-900 mb-6 uppercase border-b pb-3">
-                {activeGalerie === 'programmes' ? "Nos Vidéos & Reels Facebook" : GALERIES_DATA[activeGalerie].title}
-              </h3>
-
-              {selectedVideo ? (
-                <div className="space-y-4">
-                  <button 
-                    onClick={() => setSelectedVideo(null)}
-                    className="text-blue-600 hover:underline font-semibold text-sm flex items-center gap-1 cursor-pointer"
-                  >
-                    &larr; Retour à la liste des vidéos
-                  </button>
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black aspect-[16/9] w-full">
-                    <iframe 
-                      src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(selectedVideo)}&show_text=false&width=800&autoplay=true`}
-                      width="100%" 
-                      height="100%" 
-                      style={{ border: 'none', overflow: 'hidden' }} 
-                      scrolling="no" 
-                      frameBorder="0" 
-                      allowFullScreen={true}
-                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                      title="Grand lecteur vidéo Facebook"
-                      className="w-full h-full absolute inset-0"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {GALERIES_DATA[activeGalerie].media.map((item, index) => (
-                    <div 
-                      key={index} 
-                      onClick={() => setSelectedVideo(item.src)}
-                      className="relative rounded-xl overflow-hidden shadow-md bg-slate-900 aspect-[16/9] flex items-center justify-center group cursor-pointer"
-                    >
-                      {item.thumbnail ? (
-                        <>
-                          <Image 
-                            src={item.thumbnail} 
-                            alt="Miniature" 
-                            fill
-                            className="absolute inset-0 object-cover transition-transform duration-300 group-hover:scale-105" 
-                          />
-                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
-                        </>
+          {/* AFFICHAGE CONDITIONNEL DES ENSEIGNEMENTS */}
+          {enseignements.length === 0 ? (
+            <div className="text-center py-16 px-6 bg-white rounded-3xl border border-gray-200 shadow-sm">
+              <p className="text-gray-500 text-lg font-medium">
+                Aucun enseignement disponible pour le moment.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {enseignements.map((item) => (
+                <Link 
+                  key={item.id || item.slug}
+                  href={`/enseignements/${item.slug}`}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 border border-gray-200/80 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="relative h-56 w-full overflow-hidden bg-slate-900">
+                      {item.image_url ? (
+                        <img
+                          src={item.image_url}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                        />
                       ) : (
-                        <div className="absolute inset-0 bg-blue-950 group-hover:bg-blue-900 transition-colors" />
-                      )}
-
-                      <div className="relative z-10 flex flex-col items-center justify-center">
-                        <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-xl font-bold shadow-lg mb-2 group-hover:scale-110 transition-transform">
-                          ▶
+                        <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500">
+                          Pas d'image
                         </div>
-                        <span className="font-semibold text-sm text-white drop-shadow-md">Regarder la vidéo</span>
+                      )}
+                      <div className="absolute top-4 left-4">
+                        <span className="text-xs font-bold uppercase tracking-wider text-blue-950 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full shadow-sm">
+                          {item.category}
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-
+                    <div className="p-6">
+                      <h3 className="text-2xl font-black text-slate-900 group-hover:text-blue-950 transition-colors leading-snug tracking-tight">
+                        {item.title}
+                      </h3>
+                      {item.excerpt && (
+                        <p className="text-gray-600 text-sm mt-3 line-clamp-3 leading-relaxed">
+                          {item.excerpt}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="px-6 pb-6 pt-0">
+                    <span className="text-blue-900 group-hover:text-red-600 font-bold text-sm flex items-center gap-1 transition-colors">
+                      Lire l'article complet →
+                    </span>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </div>
-        )}
+          )}
+
+        </div>
       </section>
 
       {/* CONVERSION */}
@@ -540,7 +488,7 @@ export default function NotreHistoire() {
         </div>
       )}
 
-      {/* MODALE DE DON (POP-UP) */}
+      {/* MODALE DE DON */}
       <DonationModal 
         isOpen={isDonationOpen} 
         onClose={() => setIsDonationOpen(false)} 

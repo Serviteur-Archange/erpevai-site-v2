@@ -2,38 +2,64 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../supabase';
+import { supabase } from '@/lib/supabase';
 
 interface Communique {
+  id?: string;
   title: string;
   category: string;
   content: string;
-  date: string;
+  date?: string;
+}
+
+interface Enseignement {
+  id?: string;
+  title: string;
+  category: string;
+  image_url?: string;
+  excerpt: string;
+  content: string; // <-- Remettre content
+  slug?: string;
+  created_at?: string;
 }
 
 export default function AdminPage() {
   const router = useRouter();
+
+  // Auth
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminName, setAdminName] = useState('');
   const [password, setPassword] = useState('');
-  
-  // État pour afficher/masquer le mot de passe
   const [showPassword, setShowPassword] = useState(false);
   const [isForgotOpen, setIsForgotOpen] = useState(false);
 
-  // États pour la gestion des communiqués (Dashboard)
-  const [communiques, setCommuniques] = useState<Communique[]>([]);
-  const [originalTitle, setOriginalTitle] = useState<string | null>(null); // Pour suivre l'ancien titre en cas de modification
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('ANNONCE');
-  const [content, setContent] = useState('');
-  const [date, setDate] = useState('');
-  const [loading, setLoading] = useState(false);
+  // Navigation Onglets
+  const [activeTab, setActiveTab] = useState<'communiques' | 'enseignements'>('communiques');
 
-  // Charger les communiqués depuis Supabase une fois connecté
+  // --- ÉTATS COMMUNIQUÉS ---
+  const [communiques, setCommuniques] = useState<Communique[]>([]);
+  const [originalTitleCommunique, setOriginalTitleCommunique] = useState<string | null>(null);
+  const [communiqueTitle, setCommuniqueTitle] = useState('');
+  const [communiqueCategory, setCommuniqueCategory] = useState('ANNONCE');
+  const [communiqueContent, setCommuniqueContent] = useState('');
+  const [communiqueDate, setCommuniqueDate] = useState('');
+  const [loadingCommunique, setLoadingCommunique] = useState(false);
+
+  // --- ÉTATS ENSEIGNEMENTS ---
+  const [enseignements, setEnseignements] = useState<Enseignement[]>([]);
+  const [editingEnseignementId, setEditingEnseignementId] = useState<string | null>(null);
+  const [ensTitle, setEnsTitle] = useState('');
+  const [ensCategory, setEnsCategory] = useState('Prière & Jeûne');
+  const [ensImageUrl, setEnsImageUrl] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [ensExcerpt, setEnsExcerpt] = useState('');
+  const [ensContent, setEnsContent] = useState('');
+  const [loadingEnseignement, setLoadingEnseignement] = useState(false);
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchCommuniques();
+      fetchEnseignements();
     }
   }, [isAuthenticated]);
 
@@ -43,17 +69,47 @@ export default function AdminPage() {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Erreur chargement communiqués :', error);
-    } else {
-      setCommuniques(data || []);
+    if (!error && data) setCommuniques(data);
+  };
+
+  const fetchEnseignements = async () => {
+    const { data, error } = await supabase
+      .from('enseignements')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) setEnseignements(data);
+  };
+
+  // UPLOAD D'IMAGE VERS SUPABASE STORAGE (Bucket: images)
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(fileName, file, { cacheControl: '3600', upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('images').getPublicUrl(fileName);
+      setEnsImageUrl(data.publicUrl);
+    } catch (err: any) {
+      console.error("Erreur téléversement :", err);
+      alert("Erreur d'envoi de l'image : " + (err?.message || "Vérifiez votre bucket 'images'"));
+    } finally {
+      setUploadingImage(false);
     }
   };
 
-  // Vérification dans la table 'admins' de Supabase
+  // Connexion Admin
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const { data, error } = await supabase
         .from('admins')
@@ -73,85 +129,144 @@ export default function AdminPage() {
     }
   };
 
-  // Soumission (Ajout ou Modification)
-  const handleSubmit = async (e: React.FormEvent) => {
+  // --- ACTIONS COMMUNIQUÉS ---
+  const handleCommuniqueSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingCommunique(true);
 
     try {
-      const communiqueData = {
-        title,
-        category,
-        content,
-        date: date || new Date().toISOString().split('T')[0],
-      };
+      const payload = {
+  title: ensTitle,
+  category: ensCategory,
+  image_url: ensImageUrl,
+  excerpt: ensExcerpt,
+  VOTRE_NOM_DE_COLONNE: ensContent, // <-- Mettez le nom exact ici
+  slug: `${generatedSlug}-${Date.now()}`
+};
 
-      if (originalTitle !== null) {
-        // Mode Modification (on cible l'élément par son ancien titre)
+      if (originalTitleCommunique !== null) {
         const { error } = await supabase
           .from('communiques')
-          .update(communiqueData)
-          .eq('title', originalTitle);
-
+          .update(payload)
+          .eq('title', originalTitleCommunique);
         if (error) throw error;
-        alert('Communiqué mis à jour avec succès !');
+        alert('Communiqué mis à jour !');
       } else {
-        // Mode Ajout
-        const { error } = await supabase
-          .from('communiques')
-          .insert([communiqueData]);
-
+        const { error } = await supabase.from('communiques').insert([payload]);
         if (error) throw error;
-        alert('Communiqué publié avec succès !');
+        alert('Communiqué publié !');
       }
 
-      // Réinitialiser le formulaire
-      resetForm();
+      resetCommuniqueForm();
       fetchCommuniques();
-    } catch (error) {
-      console.error('Erreur :', error);
-      alert('Une erreur est survenue lors de l\'enregistrement.');
+    } catch (err: any) {
+      console.error(err);
+      alert('Erreur lors de l\'enregistrement : ' + (err?.message || 'Inconnue'));
     } finally {
-      setLoading(false);
+      setLoadingCommunique(false);
     }
   };
 
-  // Préparer le formulaire pour la modification
-  const handleEdit = (communique: Communique) => {
-    setOriginalTitle(communique.title);
-    setTitle(communique.title);
-    setCategory(communique.category);
-    setContent(communique.content);
-    setDate(communique.date);
+  const handleEditCommunique = (item: Communique) => {
+    setOriginalTitleCommunique(item.title);
+    setCommuniqueTitle(item.title);
+    setCommuniqueCategory(item.category);
+    setCommuniqueContent(item.content);
+    setCommuniqueDate(item.date || '');
   };
 
-  // Supprimer un communiqué
-  const handleDelete = async (itemTitle: string) => {
-    if (!confirm('Voulez-vous vraiment supprimer ce communiqué ?')) return;
+  const handleDeleteCommunique = async (itemTitle: string) => {
+    if (!confirm('Supprimer ce communiqué ?')) return;
+    const { error } = await supabase.from('communiques').delete().eq('title', itemTitle);
+    if (!error) fetchCommuniques();
+  };
+
+  const resetCommuniqueForm = () => {
+    setOriginalTitleCommunique(null);
+    setCommuniqueTitle('');
+    setCommuniqueCategory('ANNONCE');
+    setCommuniqueContent('');
+    setCommuniqueDate('');
+  };
+
+  // --- ACTIONS ENSEIGNEMENTS ---
+  const handleEnseignementSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoadingEnseignement(true);
+
+    const generatedSlug = ensTitle
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
 
     try {
-      const { error } = await supabase
-        .from('communiques')
-        .delete()
-        .eq('title', itemTitle);
+      const payload = {
+        title: ensTitle,
+        category: ensCategory,
+        image_url: ensImageUrl,
+        excerpt: ensExcerpt,
+        description: ensContent,
+        slug: `${generatedSlug}-${Date.now()}`
+      };
 
-      if (error) throw error;
-      fetchCommuniques();
-    } catch (error) {
-      console.error('Erreur lors de la suppression :', error);
-      alert('Impossible de supprimer ce communiqué.');
+      if (editingEnseignementId) {
+        const { error } = await supabase
+          .from('enseignements')
+          .update(payload)
+          .eq('id', editingEnseignementId);
+
+        if (error) {
+          alert(`Erreur Supabase: ${error.message}`);
+          return;
+        }
+        alert('Enseignement mis à jour !');
+      } else {
+        const { error } = await supabase.from('enseignements').insert([payload]);
+
+        if (error) {
+          alert(`Erreur Supabase: ${error.message}`);
+          return;
+        }
+        alert('Enseignement publié avec succès !');
+      }
+
+      resetEnseignementForm();
+      fetchEnseignements();
+    } catch (err: any) {
+      alert(`Erreur: ${err?.message || 'Une erreur est survenue'}`);
+    } finally {
+      setLoadingEnseignement(false);
     }
   };
 
-  // Annuler l'édition
-  const resetForm = () => {
-    setOriginalTitle(null);
-    setTitle('');
-    setCategory('ANNONCE');
-    setContent('');
-    setDate('');
+  const handleEditEnseignement = (item: Enseignement) => {
+    if (item.id) setEditingEnseignementId(item.id);
+    setEnsTitle(item.title);
+    setEnsCategory(item.category);
+    setEnsImageUrl(item.image_url || '');
+    setEnsExcerpt(item.excerpt);
+    setEnsContent(item.description || '');
   };
 
+  const handleDeleteEnseignement = async (id?: string) => {
+    if (!id || !confirm('Supprimer cet enseignement ?')) return;
+    const { error } = await supabase.from('enseignements').delete().eq('id', id);
+    if (!error) fetchEnseignements();
+  };
+
+  const resetEnseignementForm = () => {
+    setEditingEnseignementId(null);
+    setEnsTitle('');
+    setEnsCategory('Prière & Jeûne');
+    setEnsImageUrl('');
+    setEnsExcerpt('');
+    setEnsContent('');
+  };
+
+  // ÉCRAN DE CONNEXION
   if (!isAuthenticated) {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
@@ -168,7 +283,7 @@ export default function AdminPage() {
           </h1>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Service Communication / Login</label>
+              <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Identifiant Admin</label>
               <input
                 type="text"
                 placeholder="Entrez votre identifiant"
@@ -180,7 +295,7 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Mot de passe personnel</label>
+              <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Mot de passe</label>
               <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -195,16 +310,12 @@ export default function AdminPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0 }}
                 >
-                  {showPassword ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                  ) : (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                  )}
+                  👁
                 </button>
               </div>
             </div>
 
-            <div style={{ textAlign: 'right', marginTop: '-5px' }}>
+            <div style={{ textAlign: 'right' }}>
               <button
                 type="button"
                 onClick={() => setIsForgotOpen(true)}
@@ -216,7 +327,7 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              style={{ width: '100%', backgroundColor: '#dc2626', color: '#fff', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer', marginTop: '5px' }}
+              style={{ width: '100%', backgroundColor: '#dc2626', color: '#fff', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}
             >
               Se connecter
             </button>
@@ -224,20 +335,20 @@ export default function AdminPage() {
         </div>
 
         {isForgotOpen && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(4px)', padding: '20px' }}>
+          <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '20px' }}>
             <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '12px', maxWidth: '400px', width: '100%', padding: '30px', position: 'relative', color: '#ffffff' }}>
               <button onClick={() => setIsForgotOpen(false)} style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', color: '#9ca3af', fontSize: '20px', cursor: 'pointer' }}>&times;</button>
               <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '12px', color: '#ef4444' }}>Récupération d'accès</h3>
-              <p style={{ fontSize: '13px', color: '#d1d5db', marginBottom: '24px', lineHeight: '1.5' }}>
-                Contactez directement le support technique par WhatsApp pour réinitialiser vos accès administrateur.
+              <p style={{ fontSize: '13px', color: '#d1d5db', marginBottom: '24px' }}>
+                Contactez le support technique via WhatsApp pour réinitialiser vos identifiants.
               </p>
               <a
-                href="https://wa.me/2250545946345?text=Bonjour,%20je%20suis%20bloqué%20sur%20l'espace%20admin%20d'ERPEVAI%20et%20j'aimerais%20réinitialiser%20mon%20mot%20de%20passe."
+                href="https://wa.me/2250545946345?text=Bonjour,%20je%20souhaite%20reinitialiser%20mon%20mot%20de%20passe%20admin%20ERPEVAI."
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: 'block', width: '100%', textAlign: 'center', backgroundColor: '#16a34a', color: '#ffffff', padding: '12px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', boxSizing: 'border-box' }}
+                style={{ display: 'block', width: '100%', textAlign: 'center', backgroundColor: '#16a34a', color: '#ffffff', padding: '12px', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none' }}
               >
-                Contacter le Support via WhatsApp
+                Contacter via WhatsApp
               </a>
             </div>
           </div>
@@ -246,12 +357,14 @@ export default function AdminPage() {
     );
   }
 
+  // DASHBOARD ADMIN CONNECTÉ
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#111827', color: '#ffffff', padding: '40px 20px' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '30px', position: 'relative' }}>
+      <div style={{ maxWidth: '850px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         
+        {/* Entête Dashboard */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#1f2937', padding: '20px', borderRadius: '12px', border: '1px solid #374151' }}>
-          <h1 style={{ fontSize: '20px', fontWeight: 'bold' }}>Tableau de bord - Gestion des Communiqués</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: 'bold' }}>Panneau Administration</h1>
           <button
             onClick={() => router.push('/')}
             style={{ backgroundColor: '#374151', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
@@ -260,123 +373,263 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {/* Formulaire Ajout / Modification */}
-        <div style={{ backgroundColor: '#1f2937', padding: '30px', borderRadius: '12px', border: '1px solid #374151' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px', color: originalTitle !== null ? '#3b82f6' : '#22c55e' }}>
-            {originalTitle !== null ? 'Modifier le communiqué' : 'Publier une nouvelle information'}
-          </h2>
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Titre</label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
-              />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Catégorie</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
-                >
-                  <option value="ANNONCE">Annonce</option>
-                  <option value="CULTE">Culte</option>
-                  <option value="COMMUNIQUÉ">Communiqué</option>
-                  <option value="DIRECTION">Direction</option>
-                  <option value="ÉVÉNEMENT">Événement</option>
-                  <option value="SÉMINAIRE">Séminaire</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Date</label>
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Contenu / Message</label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                required
-                rows={4}
-                style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{ flex: 1, backgroundColor: originalTitle !== null ? '#3b82f6' : '#dc2626', color: '#fff', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}
-              >
-                {loading ? 'Enregistrement...' : originalTitle !== null ? 'Mettre à jour' : 'Publier'}
-              </button>
-
-              {originalTitle !== null && (
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  style={{ backgroundColor: '#4b5563', color: '#fff', padding: '12px 20px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}
-                >
-                  Annuler
-                </button>
-              )}
-            </div>
-          </form>
+        {/* Boutons d'Onglets */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => setActiveTab('communiques')}
+            style={{
+              flex: 1,
+              padding: '12px',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: 'pointer',
+              backgroundColor: activeTab === 'communiques' ? '#dc2626' : '#1f2937',
+              color: '#ffffff'
+            }}
+          >
+            Communiqués Officiels
+          </button>
+          <button
+            onClick={() => setActiveTab('enseignements')}
+            style={{
+              flex: 1,
+              padding: '12px',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: 'pointer',
+              backgroundColor: activeTab === 'enseignements' ? '#2563eb' : '#1f2937',
+              color: '#ffffff'
+            }}
+          >
+            Gestion des Enseignements
+          </button>
         </div>
 
-        {/* Liste des communiqués existants avec options Modifier / Supprimer */}
-        <div style={{ backgroundColor: '#1f2937', padding: '30px', borderRadius: '12px', border: '1px solid #374151' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '20px' }}>Communiqués enregistrés</h2>
+        {/* --- ONGLET 1 : COMMUNIQUÉS --- */}
+        {activeTab === 'communiques' && (
+          <>
+            <div style={{ backgroundColor: '#1f2937', padding: '30px', borderRadius: '12px', border: '1px solid #374151' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px', color: originalTitleCommunique !== null ? '#3b82f6' : '#ef4444' }}>
+                {originalTitleCommunique !== null ? 'Modifier le communiqué' : 'Publier une annonce / communiqué'}
+              </h2>
 
-          {communiques.length === 0 ? (
-            <p style={{ color: '#9ca3af', fontSize: '14px' }}>Aucun communiqué pour le moment.</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              {communiques.map((item, index) => (
-                <div key={index} style={{ backgroundColor: '#374151', padding: '15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '15px' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '5px' }}>
-                      <span style={{ fontSize: '11px', backgroundColor: '#dc2626', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>{item.category}</span>
-                      <span style={{ fontSize: '12px', color: '#9ca3af' }}>{item.date}</span>
-                    </div>
-                    <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>{item.title}</h3>
-                    <p style={{ fontSize: '13px', color: '#d1d5db', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.content}</p>
+              <form onSubmit={handleCommuniqueSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Titre</label>
+                  <input
+                    type="text"
+                    value={communiqueTitle}
+                    onChange={(e) => setCommuniqueTitle(e.target.value)}
+                    required
+                    style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Catégorie</label>
+                    <select
+                      value={communiqueCategory}
+                      onChange={(e) => setCommuniqueCategory(e.target.value)}
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                    >
+                      <option value="ANNONCE">Annonce</option>
+                      <option value="CULTE">Culte</option>
+                      <option value="COMMUNIQUÉ">Communiqué</option>
+                      <option value="DIRECTION">Direction</option>
+                      <option value="ÉVÉNEMENT">Événement</option>
+                      <option value="SÉMINAIRE">Séminaire</option>
+                    </select>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <button
-                      onClick={() => handleEdit(item)}
-                      style={{ backgroundColor: '#3b82f6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
-                    >
-                      Modifier
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.title)}
-                      style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
-                    >
-                      Supprimer
-                    </button>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Date</label>
+                    <input
+                      type="date"
+                      value={communiqueDate}
+                      onChange={(e) => setCommuniqueDate(e.target.value)}
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                    />
                   </div>
                 </div>
-              ))}
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Message</label>
+                  <textarea
+                    value={communiqueContent}
+                    onChange={(e) => setCommuniqueContent(e.target.value)}
+                    required
+                    rows={4}
+                    style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    type="submit"
+                    disabled={loadingCommunique}
+                    style={{ flex: 1, backgroundColor: originalTitleCommunique !== null ? '#3b82f6' : '#dc2626', color: '#fff', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}
+                  >
+                    {loadingCommunique ? 'Enregistrement...' : originalTitleCommunique !== null ? 'Mettre à jour' : 'Publier'}
+                  </button>
+                  {originalTitleCommunique !== null && (
+                    <button type="button" onClick={resetCommuniqueForm} style={{ backgroundColor: '#4b5563', color: '#fff', padding: '12px 20px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
+                      Annuler
+                    </button>
+                  )}
+                </div>
+              </form>
             </div>
-          )}
-        </div>
+
+            <div style={{ backgroundColor: '#1f2937', padding: '30px', borderRadius: '12px', border: '1px solid #374151' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '20px' }}>Communiqués en ligne ({communiques.length})</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {communiques.map((item, idx) => (
+                  <div key={idx} style={{ backgroundColor: '#374151', padding: '15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <span style={{ fontSize: '11px', backgroundColor: '#dc2626', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold', marginRight: '8px' }}>{item.category}</span>
+                      <span style={{ fontSize: '12px', color: '#9ca3af' }}>{item.date}</span>
+                      <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginTop: '4px' }}>{item.title}</h3>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => handleEditCommunique(item)} style={{ backgroundColor: '#3b82f6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Modifier</button>
+                      <button onClick={() => handleDeleteCommunique(item.title)} style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Supprimer</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* --- ONGLET 2 : ENSEIGNEMENTS --- */}
+        {activeTab === 'enseignements' && (
+          <>
+            <div style={{ backgroundColor: '#1f2937', padding: '30px', borderRadius: '12px', border: '1px solid #374151' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px', color: editingEnseignementId ? '#3b82f6' : '#2563eb' }}>
+                {editingEnseignementId ? 'Modifier l\'enseignement' : 'Publier un nouvel enseignement'}
+              </h2>
+
+              <form onSubmit={handleEnseignementSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Titre de l'enseignement</label>
+                  <input
+                    type="text"
+                    value={ensTitle}
+                    onChange={(e) => setEnsTitle(e.target.value)}
+                    placeholder="ex: La puissance de la prière fervente"
+                    required
+                    style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Catégorie</label>
+                  <select
+                    value={ensCategory}
+                    onChange={(e) => setEnsCategory(e.target.value)}
+                    style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                  >
+                    <option value="Prière & Jeûne">Prière & Jeûne</option>
+                    <option value="Foi & Victoire">Foi & Victoire</option>
+                    <option value="Vie Chrétienne">Vie Chrétienne</option>
+                    <option value="Éditorial">Éditorial</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af', fontWeight: 'bold' }}>
+                    IMAGE DE L'ARTICLE
+                  </label>
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '10px 15px', border: '1px solid #d1d5db' }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      style={{
+                        width: '100%',
+                        color: '#374151',
+                        fontSize: '14px',
+                        cursor: 'pointer'
+                      }}
+                    />
+                  </div>
+                  {uploadingImage && <p style={{ fontSize: '12px', color: '#3b82f6', marginTop: '6px' }}>Téléversement en cours...</p>}
+                  {ensImageUrl && !uploadingImage && (
+                    <div style={{ marginTop: '10px', borderRadius: '8px', overflow: 'hidden', height: '120px', width: '200px', backgroundColor: '#111827' }}>
+                      <img src={ensImageUrl} alt="Aperçu" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Résumé (Extrait court)</label>
+                  <textarea
+                    value={ensExcerpt}
+                    onChange={(e) => setEnsExcerpt(e.target.value)}
+                    required
+                    rows={2}
+                    placeholder="Court aperçu..."
+                    style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#9ca3af' }}>Contenu complet du message</label>
+                  <textarea
+                    value={ensContent}
+                    onChange={(e) => setEnsContent(e.target.value)}
+                    required
+                    rows={6}
+                    placeholder="Message complet..."
+                    style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#374151', border: '1px solid #4b5563', color: '#fff', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    type="submit"
+                    disabled={loadingEnseignement || uploadingImage}
+                    style={{ flex: 1, backgroundColor: editingEnseignementId ? '#3b82f6' : '#2563eb', color: '#fff', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}
+                  >
+                    {loadingEnseignement ? 'Enregistrement...' : editingEnseignementId ? 'Mettre à jour' : 'Publier Enseignement'}
+                  </button>
+                  {editingEnseignementId && (
+                    <button type="button" onClick={resetEnseignementForm} style={{ backgroundColor: '#4b5563', color: '#fff', padding: '12px 20px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
+                      Annuler
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+
+            <div style={{ backgroundColor: '#1f2937', padding: '30px', borderRadius: '12px', border: '1px solid #374151' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '20px' }}>Enseignements publiés ({enseignements.length})</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {enseignements.map((item) => (
+                  <div key={item.id} style={{ backgroundColor: '#374151', padding: '15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                      {item.image_url && (
+                        <img src={item.image_url} alt="" style={{ width: '50px', height: '50px', borderRadius: '6px', objectFit: 'cover' }} />
+                      )}
+                      <div>
+                        <span style={{ fontSize: '11px', backgroundColor: '#2563eb', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold', marginRight: '8px' }}>{item.category}</span>
+                        <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginTop: '4px' }}>{item.title}</h3>
+                        <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '2px' }}>{item.excerpt}</p>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => handleEditEnseignement(item)} style={{ backgroundColor: '#3b82f6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Modifier</button>
+                      <button onClick={() => handleDeleteEnseignement(item.id)} style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Supprimer</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
       </div>
     </div>

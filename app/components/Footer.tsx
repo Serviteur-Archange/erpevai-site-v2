@@ -45,8 +45,17 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500">
-        © 2026 ERPEVAI - Tous droits réservés
+      {/* Bas de page ultra-discret */}
+      <div className="border-t border-gray-800 mt-16 pt-8 text-center text-xs text-gray-600 font-light space-y-2">
+        <p>© 2026 ERPEVAI - Tous droits réservés</p>
+        <p>
+          <Link 
+            href="/admin" 
+            className="font-light text-gray-600 hover:text-gray-400 transition-colors"
+          >
+            Se connecter
+          </Link>
+        </p>
       </div>
     </footer>
   );
