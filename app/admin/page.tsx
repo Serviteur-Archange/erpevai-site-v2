@@ -134,15 +134,24 @@ export default function AdminPage() {
     e.preventDefault();
     setLoadingCommunique(true);
 
-    try {
-      const payload = {
-  title: ensTitle,
-  category: ensCategory,
-  image_url: ensImageUrl,
-  excerpt: ensExcerpt,
-  VOTRE_NOM_DE_COLONNE: ensContent, // <-- Mettez le nom exact ici
-  slug: `${generatedSlug}-${Date.now()}`
-};
+   try {
+  // 1. Générer le slug proprement à partir du titre
+  const generatedSlug = ensTitle
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Enlève les caractères spéciaux
+    .replace(/[\s_-]+/g, '-') // Remplace les espaces par des tirets
+    .replace(/^-+|-+$/g, '');
+
+  // 2. Préparer le payload
+  const payload = {
+    title: ensTitle,
+    category: ensCategory,
+    image_url: ensImageUrl,
+    excerpt: ensExcerpt,
+    content: ensContent, // <-- Remplacez "content" si votre colonne s'appelle différemment dans Supabase
+    slug: `${generatedSlug}-${Date.now()}`
+  };
 
       if (originalTitleCommunique !== null) {
         const { error } = await supabase
