@@ -3,9 +3,10 @@ import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import DonationModal from './DonationModal'
+import DonationModal from './DonationModal';
 import MarqueeCommuniques from './components/MarqueeCommuniques';
 import Gallery from './components/Gallery';
+import Footer from './components/Footer';
 
 const GALERIES_DATA: {
   [key: string]: {
@@ -67,7 +68,6 @@ export default function NotreHistoire() {
 
     const fetchPublicCommuniques = async () => {
       try {
-        // On utilise l'URL absolue basée sur l'hôte actuel pour éviter les échecs de fetch en production
         const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
         const response = await fetch(`${baseUrl}/api/communiques`);
         const result = await response.json();
@@ -226,7 +226,7 @@ export default function NotreHistoire() {
         </div>
       </section>
 
-      {/* SECTION VOLET INFORMATIONS / CONSEIL NATIONAL (AVEC SLIDER HORIZONTAL) */}
+      {/* SECTION VOLET INFORMATIONS / CONSEIL NATIONAL */}
       <div style={{ backgroundColor: '#111827', padding: '80px 16px', color: '#ffffff', width: '100%' }}>
         <div style={{ maxWidth: '1152px', margin: '0 auto' }}>
           
@@ -415,7 +415,6 @@ export default function NotreHistoire() {
                 {activeGalerie === 'programmes' ? "Nos Vidéos & Reels Facebook" : GALERIES_DATA[activeGalerie].title}
               </h3>
 
-              {/* SI UNE VIDÉO EST SÉLECTIONNÉE : ON AFFICHE LE GRAND LECTEUR */}
               {selectedVideo ? (
                 <div className="space-y-4">
                   <button 
@@ -440,7 +439,6 @@ export default function NotreHistoire() {
                   </div>
                 </div>
               ) : (
-                /* SINON : GRILLE DES MINIATURES */
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {GALERIES_DATA[activeGalerie].media.map((item, index) => (
                     <div 
@@ -510,69 +508,8 @@ export default function NotreHistoire() {
         </div>
       </section>
 
-      {/* CONTACT */}
-      <section id="contact" className="py-20 px-6 md:px-20 bg-black text-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
-          <div>
-            <h3 className="text-3xl font-bold mb-6">
-              ERPEVAI
-            </h3>
-            <p className="text-gray-400 leading-8">
-              Église de Réveil du Plein Évangile
-              Vision Apostolique Internationale.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-2xl font-bold mb-6">
-              Navigation
-            </h3>
-            <ul className="space-y-3 text-gray-400">
-              <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Accueil
-                </Link>
-              </li>
-              <li>
-                <Link href="/nos-eglises" className="hover:text-white transition-colors">
-                  Nos églises
-                </Link>
-              </li>
-              <li>
-                <Link href="/medias" className="hover:text-white transition-colors">
-                  Espace médias
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-2xl font-bold mb-6">
-              Contact
-            </h3>
-            <p className="text-gray-400">
-              Bouaké - Côte d’Ivoire
-            </p>
-            <p className="text-gray-400 mt-3">
-              WhatsApp : 0709172800
-            </p>
-            <p className="text-gray-400 mt-3">
-              Service Communication : 0545946345
-            </p>
-          </div>
-        </div>
-        <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500">
-          © 2026 ERPEVAI - Tous droits réservés
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '40px', paddingBottom: '20px' }}>
-          <a href="/admin" style={{ color: '#4b5563', fontSize: '12px', textDecoration: 'none' }}>
-            Espace Admin
-          </a>
-        </div>
-      </section>
+      {/* PIED DE PAGE GLOBAL */}
+      <Footer />
 
       {/* MODALE DU COMMUNIQUÉ */}
       {selectedCommunique && (
