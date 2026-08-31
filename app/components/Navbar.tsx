@@ -13,7 +13,7 @@ export default function Navbar() {
     if (typeof window !== 'undefined') {
       if (window.scrollY > lastScrollY && window.scrollY > 80) {
         setShowNavbar(false);
-        setIsMobileMenuOpen(false); // Ferme aussi le menu mobile si ouvert lors du scroll
+        setIsMobileMenuOpen(false);
       } else {
         setShowNavbar(true);
       }
@@ -36,7 +36,7 @@ export default function Navbar() {
     }`}>
       <div className="max-w-7xl mx-auto h-20 flex items-center justify-between px-3 sm:px-6">
         
-        {/* Logo et Titre (Cliquable pour retourner à l'accueil) */}
+        {/* Logo et Titre */}
         <Link 
           href="/" 
           className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 hover:opacity-90 transition-opacity"
@@ -99,7 +99,9 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link href="/Nos-eglises" className="hover:text-blue-300 transition">Nos églises</Link>
+          <Link href="/nos-eglises" className="hover:text-blue-300 transition">
+            Nos églises
+          </Link>
 
           <Link href="/espace-medias" className="hover:text-blue-300 transition">
             Espace médias
@@ -140,7 +142,6 @@ export default function Navbar() {
             Accueil
           </Link>
 
-          {/* Accordéon Vie de l'Église sur mobile */}
           <div>
             <button 
               onClick={() => setIsMobileVieEgliseOpen(!isMobileVieEgliseOpen)}
@@ -187,7 +188,7 @@ export default function Navbar() {
           </div>
 
           <Link 
-            href="/Nos-eglises" 
+            href="/nos-eglises" 
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-lg font-medium hover:text-blue-300 transition py-2 border-b border-blue-900/50"
           >
